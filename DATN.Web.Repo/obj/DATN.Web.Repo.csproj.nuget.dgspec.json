@@ -1,0 +1,134 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\datn\\api\\DATN.Web\\DATN.Web.Repo\\DATN.Web.Repo.csproj": {}
+  },
+  "projects": {
+    "E:\\datn\\api\\DATN.Web\\DATN.Web.Repo\\DATN.Web.Repo.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\datn\\api\\DATN.Web\\DATN.Web.Repo\\DATN.Web.Repo.csproj",
+        "projectName": "DATN.Web.Repo",
+        "projectPath": "E:\\datn\\api\\DATN.Web\\DATN.Web.Repo\\DATN.Web.Repo.csproj",
+        "packagesPath": "C:\\Users\\20173003\\.nuget\\packages\\",
+        "outputPath": "E:\\datn\\api\\DATN.Web\\DATN.Web.Repo\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\20173003\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "E:\\datn\\api\\DATN.Web\\DATN.Web.Service\\DATN.Web.Service.csproj": {
+                "projectPath": "E:\\datn\\api\\DATN.Web\\DATN.Web.Service\\DATN.Web.Service.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "MySqlConnector": {
+              "target": "Package",
+              "version": "[2.1.13, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.413\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\datn\\api\\DATN.Web\\DATN.Web.Service\\DATN.Web.Service.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\datn\\api\\DATN.Web\\DATN.Web.Service\\DATN.Web.Service.csproj",
+        "projectName": "DATN.Web.Service",
+        "projectPath": "E:\\datn\\api\\DATN.Web\\DATN.Web.Service\\DATN.Web.Service.csproj",
+        "packagesPath": "C:\\Users\\20173003\\.nuget\\packages\\",
+        "outputPath": "E:\\datn\\api\\DATN.Web\\DATN.Web.Service\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\20173003\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.413\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
