@@ -171,19 +171,19 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="id">id thực thể</param>
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(T t)
         {
             try
             {
-                var rowsAffect = _baseRepo.Delete<T>(id);
-                if (rowsAffect > 0)
+                var result = await _baseRepo.DeleteAsync(t);
+                if (result)
                 {
-                    var actionResult = new DAResult(200, Resources.deleteDataSuccess, "", rowsAffect);
+                    var actionResult = new DAResult(200, Resources.deleteDataSuccess, "", result);
                     return Ok(actionResult);
                 }
                 else
                 {
-                    var actionResult = new DAResult(204, Resources.deleteDataFail, "", 0);
+                    var actionResult = new DAResult(204, Resources.deleteDataFail, "", false);
                     return Ok(actionResult);
                 }
             }
@@ -194,7 +194,7 @@ namespace DATN.Web.Api.Controllers
             }
             catch (Exception exception)
             {
-                var actionResult = new DAResult(500, Resources.error, exception.Message, 0);
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
                 return Ok(actionResult);
             }
         }
