@@ -18,3 +18,5 @@ project.lock.json
 nupkg/
 .vscode
 *.log
+*.suo
+*.cache
