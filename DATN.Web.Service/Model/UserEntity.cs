@@ -35,10 +35,6 @@ namespace DATN.Web.Service.Model
         /// <summary>
         public string password { get; set; }
         /// <summary>
-        /// Địa chỉ người dùng
-        /// <summary>
-        public string address { get; set; }
-        /// <summary>
         /// Số điện thoại người dùng
         /// <summary>
         public int phone { get; set; }
@@ -54,5 +50,9 @@ namespace DATN.Web.Service.Model
         /// Có bị chặn hoạt động hay không
         /// <summary>
         public int is_block { get; set; }
+        /// <summary>
+        /// Định danh giỏ hàng
+        /// <summary>
+        public Guid cart_id { get; set; }
     }
 }
