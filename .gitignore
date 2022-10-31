@@ -20,3 +20,4 @@ nupkg/
 *.log
 *.suo
 *.cache
+*.FileListAbsolute.text
