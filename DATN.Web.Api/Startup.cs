@@ -42,6 +42,26 @@ namespace DATN.Web.Api
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepo, UserRepo>();
 
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductRepo, ProductRepo>();
+
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderRepo, OrderRepo>();
+
+            services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IAddressRepo, AddressRepo>();
+
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ICategoryRepo, CategoryRepo>();
+
+            services.AddScoped<IColorService, ColorService>();
+            services.AddScoped<IColorRepo, ColorRepo>();
+
+            services.AddScoped<ISizeService, SizeService>();
+            services.AddScoped<ISizeRepo, SizeRepo>();
+
+            services.AddScoped<IVoucherService, VoucherService>();
+            services.AddScoped<IVoucherRepo, VoucherRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

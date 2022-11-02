@@ -52,7 +52,7 @@ namespace DATN.Web.Api.Controllers
             try
             {
                 var res = await _baseRepo.GetAsync<T>();
-                if (res.Count() > 0)
+                if (res?.Count > 0)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
                     return Ok(actionResult);
@@ -137,7 +137,7 @@ namespace DATN.Web.Api.Controllers
         /// Update một thực thể t
         /// </summary>
         /// <param name="t">Thông tin thực thể t</param>
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> Update(T t)
         {
             try

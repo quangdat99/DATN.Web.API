@@ -1,6 +1,7 @@
 ﻿using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
+using DATN.Web.Service.Properties;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,12 @@ namespace DATN.Web.Api.Controllers
     public class UserController : BaseController<UserEntity>
     {
         /// <summary>
-        /// Service nhóm hàng hóa
+        /// Service Người dùng
         /// </summary>
         IUserService _userService;
 
         /// <summary>
-        /// Repo nhóm hàng hóa
+        /// Repo Người dùng
         /// </summary>
         IUserRepo _userRepo;
         /// <summary>
@@ -34,6 +35,61 @@ namespace DATN.Web.Api.Controllers
         {
             _userService = userService;
             _userRepo = userRepo;
+        }
+
+        /// <summary>
+        /// Lấy Thông tin người dùng
+        /// </summary>
+        [HttpGet("info/{id}")]
+        public async Task<IActionResult> GetUserInfo(Guid id)
+        {
+            try
+            {
+                var res = await _userRepo.GetUserInfo(id);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<UserEntity>());
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<UserEntity>());
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Lấy danh sách địa chỉ của một người dùng
+        /// </summary>
+        /// <param name="userId">định danh người dùng</param>
+        [HttpGet("{userId}/addresses")]
+        public async Task<IActionResult> GetAddressByUserId(Guid userId)
+        {
+            try
+             {
+                var res = await _userRepo.GetAddressByUserId(userId);
+                if (res?.Count > 0)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<UserEntity>());
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<UserEntity>());
+                return Ok(actionResult);
+            }
         }
     }
 }

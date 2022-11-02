@@ -33,7 +33,7 @@ namespace DATN.Web.Repo.Mysql
         /// <param name="commandText"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        Task<List<T>> QueryAsync<T>(string commandText, Dictionary<string, object> param);
+        Task<List<T>> QueryAsync<T>(string commandText, Dictionary<string, object> param, CommandType commandType = CommandType.Text);
 
         /// <summary>
         /// Thực hiện sql trả về danh sách dữ liệu
@@ -43,7 +43,7 @@ namespace DATN.Web.Repo.Mysql
         /// <param name="commandText"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        Task<List<T>> QueryAsync<T>(IDbConnection cnn, string commandText, Dictionary<string, object> param);
+        Task<List<T>> QueryAsync<T>(IDbConnection cnn, string commandText, Dictionary<string, object> param, CommandType commandType = CommandType.Text);
 
         /// <summary>
         /// Thực hiện sql trả về dữ liệu cell đầu tiên

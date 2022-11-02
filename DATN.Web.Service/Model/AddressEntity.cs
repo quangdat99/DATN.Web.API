@@ -17,7 +17,7 @@ namespace DATN.Web.Service.Model
         /// Định danh địa chỉ
         /// <summary>
         [Key]
-        public Guid address { get; set; }
+        public Guid address_id { get; set; }
         /// <summary>
         /// Định danh của người dùng
         /// <summary>

@@ -47,13 +47,13 @@ namespace DATN.Web.Repo.Mysql
             return cnn;
         }
 
-        public async Task<List<T>> QueryAsync<T>(string commandText, Dictionary<string, object> param)
+        public async Task<List<T>> QueryAsync<T>(string commandText, Dictionary<string, object> param, CommandType commandType = CommandType.Text)
         {
             IDbConnection cnn = null;
             try
             {
                 cnn = GetOpenConnection();
-                return await this.QueryAsync<T>(cnn, commandText, param);
+                return await this.QueryAsync<T>(cnn, commandText, param, commandType);
             }
             finally
             {
@@ -61,10 +61,10 @@ namespace DATN.Web.Repo.Mysql
             }
         }
 
-        public async Task<List<T>> QueryAsync<T>(IDbConnection cnn, string commandText, Dictionary<string, object> param)
+        public async Task<List<T>> QueryAsync<T>(IDbConnection cnn, string commandText, Dictionary<string, object> param, CommandType commandType = CommandType.Text)
         {
             var dynamicParams = this.GetParameters(param);
-            var result = await cnn.QueryAsync<T>(commandText, dynamicParams, commandType: CommandType.Text);
+            var result = await cnn.QueryAsync<T>(commandText, dynamicParams, commandType: commandType);
             return result.AsList();
         }
         /// <summary>
