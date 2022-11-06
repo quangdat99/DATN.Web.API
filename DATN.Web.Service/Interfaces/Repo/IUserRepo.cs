@@ -1,4 +1,5 @@
-﻿using DATN.Web.Service.Model;
+﻿using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,5 +25,11 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<List<AddressEntity>> GetAddressByUserId(Guid userId);
+
+        /// <summary>
+        /// Đăng nhập
+        /// </summary>
+        /// <param name="model"></param>
+        Task<UserEntity> Login(LoginModel model);
     }
 }

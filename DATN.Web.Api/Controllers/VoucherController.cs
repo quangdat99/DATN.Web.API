@@ -30,7 +30,7 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="VoucherService"></param>
         /// <param name="VoucherRepo"></param>
-        public VoucherController(IVoucherService voucherService, IVoucherRepo voucherRepo) : base(voucherService, voucherRepo)
+        public VoucherController(IVoucherService voucherService, IVoucherRepo voucherRepo, IServiceProvider serviceProvider) : base(voucherService, voucherRepo, serviceProvider)
         {
             _voucherService = voucherService;
             _voucherRepo = voucherRepo;

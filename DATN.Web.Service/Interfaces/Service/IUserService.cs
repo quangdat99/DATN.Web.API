@@ -1,4 +1,6 @@
-﻿using DATN.Web.Service.Model;
+﻿using DATN.Web.Service.Contexts;
+using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +14,10 @@ namespace DATN.Web.Service.Interfaces.Service
     /// </summary>
     public interface IUserService : IBaseService
     {
+        /// <summary>
+        /// Đăng nhập
+        /// </summary>
+        /// <param name="model"></param>
+        Task<Dictionary<string, object>> Login(LoginModel model);
     }
 }

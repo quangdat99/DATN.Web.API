@@ -41,10 +41,10 @@ namespace DATN.Web.Repo.Repo
         }
         #endregion
 
-        /// <summary>
-        /// Tên của lớp
-        /// </summary>
-        string _className;
+        public IConfiguration GetConfiguration()
+        {
+            return _configuration;
+        }
 
         protected IDataBaseProvider Provider
         {

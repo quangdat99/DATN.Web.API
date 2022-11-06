@@ -30,7 +30,7 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="ColorService"></param>
         /// <param name="ColorRepo"></param>
-        public ColorController(IColorService colorService, IColorRepo colorRepo) : base(colorService, colorRepo)
+        public ColorController(IColorService colorService, IColorRepo colorRepo, IServiceProvider serviceProvider) : base(colorService, colorRepo, serviceProvider)
         {
             _colorService = colorService;
             _colorRepo = colorRepo;

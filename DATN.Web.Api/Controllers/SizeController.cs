@@ -30,7 +30,7 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="SizeService"></param>
         /// <param name="SizeRepo"></param>
-        public SizeController(ISizeService sizeService, ISizeRepo sizeRepo) : base(sizeService, sizeRepo)
+        public SizeController(ISizeService sizeService, ISizeRepo sizeRepo, IServiceProvider serviceProvider) : base(sizeService, sizeRepo, serviceProvider)
         {
             _sizeService = sizeService;
             _sizeRepo = sizeRepo;

@@ -31,7 +31,7 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="ProductService"></param>
         /// <param name="ProductRepo"></param>
-        public ProductController(IProductService productService, IProductRepo productRepo) : base(productService, productRepo)
+        public ProductController(IProductService productService, IProductRepo productRepo, IServiceProvider serviceProvider) : base(productService, productRepo, serviceProvider)
         {
             _productService = productService;
             _productRepo = productRepo;

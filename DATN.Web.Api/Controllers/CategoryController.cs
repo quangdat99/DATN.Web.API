@@ -30,7 +30,7 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="CategoryService"></param>
         /// <param name="CategoryRepo"></param>
-        public CategoryController(ICategoryService categoryService, ICategoryRepo categoryRepo) : base(categoryService, categoryRepo)
+        public CategoryController(ICategoryService categoryService, ICategoryRepo categoryRepo, IServiceProvider serviceProvider) : base(categoryService, categoryRepo, serviceProvider)
         {
             _categoryService = categoryService;
             _categoryRepo = categoryRepo;

@@ -8,6 +8,8 @@ using DATN.Web.Service.Properties;
 using System.Linq;
 using System.Threading.Tasks;
 using DATN.Web.Service.Exceptions;
+using DATN.Web.Service.Contexts;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DATN.Web.Api.Controllers
 {
@@ -28,6 +30,7 @@ namespace DATN.Web.Api.Controllers
         /// Base Repo
         /// </summary>
         IBaseRepo _baseRepo;
+        protected readonly IContextService _contextService;
         #endregion
 
         #region CONSTRUCTOR
@@ -35,10 +38,11 @@ namespace DATN.Web.Api.Controllers
         /// Phương thức khởi tạo
         /// </summary>
         /// <param name="baseService"></param>
-        public BaseController(IBaseService baseService, IBaseRepo baseRepo)
+        public BaseController(IBaseService baseService, IBaseRepo baseRepo, IServiceProvider serviceProvider)
         {
             _baseService = baseService;
             _baseRepo = baseRepo;
+            _contextService = serviceProvider.GetRequiredService<IContextService>();
         }
         #endregion
 
@@ -49,6 +53,7 @@ namespace DATN.Web.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
+            var abc = _contextService.Get();
             try
             {
                 var res = await _baseRepo.GetAsync<T>();

@@ -1,4 +1,5 @@
-﻿using DATN.Web.Service.Interfaces.Repo;
+﻿using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
 using DATN.Web.Service.Properties;
@@ -31,7 +32,7 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="UserService"></param>
         /// <param name="UserRepo"></param>
-        public UserController(IUserService userService, IUserRepo userRepo) : base(userService, userRepo)
+        public UserController(IUserService userService, IUserRepo userRepo, IServiceProvider serviceProvider) : base(userService, userRepo, serviceProvider)
         {
             _userService = userService;
             _userRepo = userRepo;
@@ -69,11 +70,12 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="userId">định danh người dùng</param>
         [HttpGet("{userId}/addresses")]
-        public async Task<IActionResult> GetAddressByUserId(Guid userId)
+        public async Task<IActionResult> GetAddressByUserId()
         {
+            var context = _contextService.Get();
             try
              {
-                var res = await _userRepo.GetAddressByUserId(userId);
+                var res = await _userRepo.GetAddressByUserId(context.UserId);
                 if (res?.Count > 0)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
@@ -88,6 +90,33 @@ namespace DATN.Web.Api.Controllers
             catch (Exception exception)
             {
                 var actionResult = new DAResult(500, Resources.error, exception.Message, new List<UserEntity>());
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Đăng nhập
+        /// </summary>
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        {
+            try
+            {
+                var res = await _userService.Login(model);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
                 return Ok(actionResult);
             }
         }

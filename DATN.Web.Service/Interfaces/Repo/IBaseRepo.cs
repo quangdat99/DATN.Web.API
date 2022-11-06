@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -50,5 +51,7 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// Xóa dữu liệu
         /// </summary>
         Task<bool> DeleteAsync(object entity);
+
+        IConfiguration GetConfiguration();
     }
 }

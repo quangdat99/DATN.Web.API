@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +15,8 @@ using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Repo.Repo;
 using DATN.Web.Service.Service;
+using DATN.Web.Service.Middlewares;
+using DATN.Web.Service.Contexts;
 
 namespace DATN.Web.Api
 {
@@ -62,6 +64,7 @@ namespace DATN.Web.Api
 
             services.AddScoped<IVoucherService, VoucherService>();
             services.AddScoped<IVoucherRepo, VoucherRepo>();
+            services.AddScoped<IContextService, WebContextService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,18 +76,21 @@ namespace DATN.Web.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DATN.Web.Api v1"));
             }
-
             app.UseHttpsRedirection();
-
-            app.UseRouting();
-
             // global cors policy
             app.UseCors(x => x
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
+            // Sử dụng authen context
+            app.UseSetAuthContextHandler();
+
+
+            app.UseRouting();
+
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

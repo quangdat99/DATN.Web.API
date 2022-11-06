@@ -30,7 +30,7 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="AddressService"></param>
         /// <param name="AddressRepo"></param>
-        public AddressController(IAddressService addressService, IAddressRepo addressRepo) : base(addressService, addressRepo)
+        public AddressController(IAddressService addressService, IAddressRepo addressRepo, IServiceProvider serviceProvider) : base(addressService, addressRepo, serviceProvider)
         {
             _addressService = addressService;
             _addressRepo = addressRepo;

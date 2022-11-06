@@ -30,7 +30,7 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="OrderService"></param>
         /// <param name="OrderRepo"></param>
-        public OrderController(IOrderService orderService, IOrderRepo orderRepo) : base(orderService, orderRepo)
+        public OrderController(IOrderService orderService, IOrderRepo orderRepo, IServiceProvider serviceProvider) : base(orderService, orderRepo, serviceProvider)
         {
             _orderService = orderService;
             _orderRepo = orderRepo;
