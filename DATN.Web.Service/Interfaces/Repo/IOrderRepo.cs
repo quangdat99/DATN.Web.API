@@ -14,10 +14,10 @@ namespace DATN.Web.Service.Interfaces.Repo
     public interface IOrderRepo : IBaseRepo
     {
         /// <summary>
-        /// GetListOrder
+        /// Lấy danh sách đơn hàng theo trạng thái của khách hàng
         /// </summary>
-        /// <param name="GetListOrderDTO"></param>
+        /// <param name="listOrder"></param>
         /// <returns></returns>
-        Task<List<OrderEntity>> GetListOrder(GetListOrderDTO getListOrderDto);
+        Task<List<OrderEntity>> GetListOrder(ListOrder listOrder);
     }
 }

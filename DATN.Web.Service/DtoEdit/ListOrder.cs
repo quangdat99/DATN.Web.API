@@ -2,7 +2,7 @@ using DATN.Web.Service.Constants;
 
 namespace DATN.Web.Service.DtoEdit
 {
-    public class GetListOrderDTO
+    public class ListOrder
     {
         /// <summary>
         /// UserID
@@ -11,6 +11,6 @@ namespace DATN.Web.Service.DtoEdit
         /// <summary>
         /// Order Status
         /// </summary>
-        public string orderStatus { get; set; }
+        public string order_status { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace DATN.Web.Service.Interfaces.Service
         /// <summary>
         /// Get List Orders
         /// </summary>
-        /// <param name="getListOrderDto"></param>
-        Task<List<OrderEntity>> GetListOrder(GetListOrderDTO getListOrderDto);
+        /// <param name="listOrder"></param>
+        Task<List<OrderEntity>> GetListOrder(ListOrder listOrder);
     }
 }
