@@ -17,9 +17,13 @@ namespace DATN.Web.Service.Service
             _orderRepo = orderRepo;
         }
 
-        public async Task<List<OrderEntity>> GetListOrder(GetListOrderDTO getListOrderDto)
+        /// <summary>
+        /// Get List Orders
+        /// </summary>
+        /// <param name="listOrder"></param>
+        public async Task<List<OrderEntity>> GetListOrder(ListOrder listOrder)
         {
-            var existedOrder = await _orderRepo.GetListOrder(getListOrderDto);
+            var existedOrder = await _orderRepo.GetListOrder(listOrder);
             if (existedOrder == null || !existedOrder.Any())
             {
             }

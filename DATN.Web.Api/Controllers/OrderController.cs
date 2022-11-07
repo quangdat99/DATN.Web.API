@@ -36,12 +36,16 @@ namespace DATN.Web.Api.Controllers
             _orderRepo = orderRepo;
         }
         
+        /// <summary>
+        /// Lấy danh sách đơn hàng theo trạng thái của một người dùng
+        /// </summary>hàng
+        /// <param name="listOrder">userId và trạng thái đơn </param>
         [HttpPost("orderList")]
-        public async Task<IActionResult> GetOrderList([FromBody] GetListOrderDTO getListOrderDto)
+        public async Task<IActionResult> GetOrderList([FromBody] ListOrder listOrder)
         {
             try
             {
-                var res = await _orderService.GetListOrder(getListOrderDto);
+                var res = await _orderService.GetListOrder(listOrder);
                 if (res != null)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);

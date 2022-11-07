@@ -24,7 +24,7 @@ namespace DATN.Web.Repo.Repo
         {
         }
 
-        public async Task<List<OrderEntity>> GetListOrder(GetListOrderDTO getListOrderDto)
+        public async Task<List<OrderEntity>> GetListOrder(ListOrder listOrder)
         {
             var sql = string.Format(@"SELECT * FROM {0}
          WHERE user_id=@user_id AND status=@status",
@@ -33,14 +33,14 @@ namespace DATN.Web.Repo.Repo
 
             var param = new Dictionary<string, object>
             {
-                { "user_id", getListOrderDto.user_id },
+                { "user_id", listOrder.user_id },
                 {
-                    "status", getListOrderDto.orderStatus
+                    "status", listOrder.order_status
                 },
             };
 
             OrderStatus orderStatus;
-            if (!Enum.IsDefined(typeof(OrderStatus), getListOrderDto.orderStatus))
+            if (!Enum.IsDefined(typeof(OrderStatus), listOrder.order_status))
             {
                 throw new ValidateException("Invalid status", "");
             }
