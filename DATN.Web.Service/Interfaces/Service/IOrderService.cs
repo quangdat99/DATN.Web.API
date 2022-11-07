@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DATN.Web.Service.DtoEdit;
 
 namespace DATN.Web.Service.Interfaces.Service
 {
@@ -12,5 +13,10 @@ namespace DATN.Web.Service.Interfaces.Service
     /// </summary>
     public interface IOrderService : IBaseService
     {
+        /// <summary>
+        /// Get List Orders
+        /// </summary>
+        /// <param name="getListOrderDto"></param>
+        Task<List<OrderEntity>> GetListOrder(GetListOrderDTO getListOrderDto);
     }
 }

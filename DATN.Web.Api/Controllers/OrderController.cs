@@ -1,11 +1,11 @@
-﻿using DATN.Web.Service.Interfaces.Repo;
+﻿using System;
+using System.Threading.Tasks;
+using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
+using DATN.Web.Service.Properties;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DATN.Web.Api.Controllers
 {
@@ -34,6 +34,30 @@ namespace DATN.Web.Api.Controllers
         {
             _orderService = orderService;
             _orderRepo = orderRepo;
+        }
+        
+        [HttpPost("orderList")]
+        public async Task<IActionResult> GetOrderList([FromBody] GetListOrderDTO getListOrderDto)
+        {
+            try
+            {
+                var res = await _orderService.GetListOrder(getListOrderDto);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
         }
     }
 }

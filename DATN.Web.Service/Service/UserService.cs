@@ -90,7 +90,7 @@ namespace DATN.Web.Service.Service
             var tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken smeToken = tokenHandler.CreateToken(tokenDescriptor);
             string token = tokenHandler.WriteToken(smeToken);
-            return $"Bearer {token}";
+            return token;
         }
     }
 }
