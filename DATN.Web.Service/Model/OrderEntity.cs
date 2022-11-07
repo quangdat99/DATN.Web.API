@@ -1,4 +1,5 @@
 ﻿using DATN.Web.Service.Attributes;
+using DATN.Web.Service.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Trạng thái của đươn hàng (0: chờ lấy hàng, 1: đang giao, 2: giao thành công, 3: đã hủy đơn, 4: giao hàng thất bại)
         /// <summary>
-        public string status { get; set; }
+        public OrderStatus status { get; set; }
         /// <summary>
         /// Tên người nhận hàng
         /// <summary>

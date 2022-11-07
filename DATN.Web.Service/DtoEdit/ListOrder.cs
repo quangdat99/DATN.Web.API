@@ -11,6 +11,6 @@ namespace DATN.Web.Service.DtoEdit
         /// <summary>
         /// Order Status
         /// </summary>
-        public string order_status { get; set; }
+        public OrderStatus order_status { get; set; }
     }
 }
