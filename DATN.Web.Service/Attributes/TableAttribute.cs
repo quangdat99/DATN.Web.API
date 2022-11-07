@@ -21,7 +21,7 @@ namespace DATN.Web.Service.Attributes
         /// <param name="table">Tên bảng</param>
         public TableAttribute(string table)
         {
-            this.Table = table;
+            Table = table;
         }
     }
 }
