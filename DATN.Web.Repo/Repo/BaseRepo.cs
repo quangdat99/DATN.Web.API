@@ -137,7 +137,7 @@ namespace DATN.Web.Repo.Repo
             {
                 return null;
             }
-            return attr.Table;
+            return "`" + attr.Table + "`";
         }
 
         protected virtual string BuildQueryById(Type type)
