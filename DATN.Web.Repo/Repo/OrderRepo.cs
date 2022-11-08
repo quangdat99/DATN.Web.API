@@ -24,6 +24,11 @@ namespace DATN.Web.Repo.Repo
         {
         }
 
+        /// <summary>
+        /// Lấy danh sách đơn hàng theo trạng thái của khách hàng
+        /// </summary>
+        /// <param name="listOrder"></param>
+        /// <returns></returns>
         public async Task<List<OrderEntity>> GetListOrder(ListOrder listOrder)
         {
             var sql = string.Format(@"SELECT * FROM {0}
@@ -47,6 +52,17 @@ namespace DATN.Web.Repo.Repo
 
             var result = await Provider.QueryAsync<OrderEntity>(sql, param);
             return result?.ToList();
+        }
+
+        /// <summary>
+        /// Lấy đơn hàng theo Id
+        /// </summary>
+        /// <param name="order_id"></param>
+        /// <returns></returns>
+        public async Task<OrderEntity> GetOrderById(string order_id)
+        {
+            var res = await this.GetAsync<OrderEntity>("order_id", order_id);
+            return res.FirstOrDefault();
         }
     }
 }
