@@ -53,16 +53,5 @@ namespace DATN.Web.Repo.Repo
             var result = await Provider.QueryAsync<OrderEntity>(sql, param);
             return result?.ToList();
         }
-
-        /// <summary>
-        /// Lấy đơn hàng theo Id
-        /// </summary>
-        /// <param name="order_id"></param>
-        /// <returns></returns>
-        public async Task<OrderEntity> GetOrderById(string order_id)
-        {
-            var res = await this.GetAsync<OrderEntity>("order_id", order_id);
-            return res.FirstOrDefault();
-        }
     }
 }

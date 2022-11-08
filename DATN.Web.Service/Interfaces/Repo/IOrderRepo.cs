@@ -16,12 +16,5 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// <param name="listOrder"></param>
         /// <returns></returns>
         Task<List<OrderEntity>> GetListOrder(ListOrder listOrder);
-
-        /// <summary>
-        /// Hủy đơn hàng trong trạng thái chờ lấy hàng
-        /// </summary>
-        /// <param name="order_id"></param>
-        /// <returns></returns>
-        Task<OrderEntity> GetOrderById(string order_id);
     }
 }

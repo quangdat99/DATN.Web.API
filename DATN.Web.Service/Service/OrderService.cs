@@ -39,21 +39,22 @@ namespace DATN.Web.Service.Service
         /// <param name="cancelOrder"></param>
         public async Task<OrderEntity> CancelOrder(CancelOrder cancelOrder)
         {
-            var existedOrder = await _orderRepo.GetOrderById(cancelOrder.order_id);
+            var existedOrder = await _orderRepo.GetAsync<OrderEntity>("order_id", cancelOrder.order_id);
+            var res = existedOrder.FirstOrDefault();
 
-            if (existedOrder == null)
+            if (res == null)
             {
                 throw new ValidateException("Order not available", "");
             }
 
-            if (existedOrder.user_id.ToString() != cancelOrder.user_id)
+            if (res.user_id != cancelOrder.user_id)
             {
                 throw new ValidateException("Unauthorized", "");
             }
 
-            if (existedOrder.status == OrderStatus.Pending)
+            if (res.status == OrderStatus.Pending)
             {
-                existedOrder.status = OrderStatus.Cancelled;
+                res.status = OrderStatus.Cancelled;
                 await _orderRepo.UpdateAsync<OrderEntity>(existedOrder, "status");
             }
             else
@@ -61,7 +62,7 @@ namespace DATN.Web.Service.Service
                 throw new ValidateException("Not in Pending status", "");
             }
 
-            return existedOrder;
+            return res;
         }
     }
 }
