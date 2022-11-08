@@ -1,35 +1,35 @@
-﻿using Dapper;
-using DATN.Web.Repo.Mysql;
-using DATN.Web.Service.Attributes;
-using DATN.Web.Service.Interfaces.Repo;
-using Microsoft.Extensions.Configuration;
-using MySqlConnector;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DATN.Web.Repo.Mysql;
+using DATN.Web.Service.Attributes;
+using DATN.Web.Service.Interfaces.Repo;
+using Microsoft.Extensions.Configuration;
 
 namespace DATN.Web.Repo.Repo
 {
     public class BaseRepo : IBaseRepo
     {
         #region DECLARE
+
         /// <summary>
         /// Chuỗi thông tin kết nối
         /// </summary>
         string _connectionString;
+
         /// <summary>
         /// Config của project
         /// </summary>
         IConfiguration _configuration;
+
         protected IDataBaseProvider _dbProvider;
 
         #region CONSTRUCTOR
+
         /// <summary>
         /// Phương thức khởi tạo
         /// </summary>
@@ -39,6 +39,7 @@ namespace DATN.Web.Repo.Repo
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("DefaultConnection");
         }
+
         #endregion
 
         public IConfiguration GetConfiguration()
@@ -54,11 +55,15 @@ namespace DATN.Web.Repo.Repo
                 {
                     _dbProvider = this.CreateProvider(_connectionString);
                 }
+
                 return _dbProvider;
             }
         }
+
         #endregion
+
         #region Method
+
         protected virtual IDataBaseProvider CreateProvider(string connectionString)
         {
             return new MySqlProvider(connectionString);
@@ -127,6 +132,7 @@ namespace DATN.Web.Repo.Repo
                     return model;
                 }
             }
+
             return null;
         }
 
@@ -137,13 +143,15 @@ namespace DATN.Web.Repo.Repo
             {
                 return null;
             }
+
             return "`" + attr.Table + "`";
         }
 
         protected virtual string BuildQueryById(Type type)
         {
             var table = this.GetTableName(type);
-            var prKey = $"{table}_id";
+            var key = table.Replace("`", "");
+            var prKey = $"{key}_id";
             return $"SELECT * FROM {table} WHERE {prKey} = @key";
         }
 
@@ -153,10 +161,12 @@ namespace DATN.Web.Repo.Repo
             {
                 throw new Exception($"Không hỗ trợ toán tử {op}");
             }
+
             return op;
         }
 
-        protected virtual string BuildSelectByFieldQuery(Type type, Dictionary<string, object> param, string field, object value, string op = "=", string columns = "*")
+        protected virtual string BuildSelectByFieldQuery(Type type, Dictionary<string, object> param, string field,
+            object value, string op = "=", string columns = "*")
         {
             var sop = this.SafeOperation(op);
             var table = this.GetTableName(type);
@@ -171,10 +181,12 @@ namespace DATN.Web.Repo.Repo
                     {
                         sb.Append(",");
                     }
+
                     var p = $"p{i}";
                     sb.Append($"@{p}");
                     param[p] = vl[i];
                 }
+
                 sb.Append(")");
             }
             else
@@ -182,6 +194,7 @@ namespace DATN.Web.Repo.Repo
                 sb.Append("@value");
                 param["value"] = value;
             }
+
             return sb.ToString();
         }
 
@@ -189,12 +202,14 @@ namespace DATN.Web.Repo.Repo
         {
             var fields = this.GetTableColumns(type);
             var tableName = this.GetTableName(type);
-            var query = $"INSERT INTO {tableName} (`{string.Join("`,`", fields)}`) VALUE(@{string.Join(",@", fields)});";
+            var query =
+                $"INSERT INTO {tableName} (`{string.Join("`,`", fields)}`) VALUE(@{string.Join(",@", fields)});";
             var keys = this.GetKeyFields(type);
             if (keys.Count == 1)
             {
                 query += "select last_insert_id()";
             }
+
             return query;
         }
 
@@ -210,6 +225,7 @@ namespace DATN.Web.Repo.Repo
                     fields.Add(item.Name);
                 }
             }
+
             return fields;
         }
 
@@ -230,6 +246,7 @@ namespace DATN.Web.Repo.Repo
             {
                 return null;
             }
+
             var result = new Dictionary<PropertyInfo, TAttribute>();
             var prs = type.GetProperties();
             foreach (var pr in prs)
@@ -240,6 +257,7 @@ namespace DATN.Web.Repo.Repo
                     result.Add(pr, attr);
                 }
             }
+
             return result;
         }
 
@@ -300,10 +318,12 @@ namespace DATN.Web.Repo.Repo
                     }
                 }
             }
+
             var table = this.GetTableName(type);
             if (string.IsNullOrEmpty(table)) throw new Exception($"Not found table in type {type} ");
 
-            var query = $"UPDATE {table} SET {string.Join(", ", updateFields.Select(n => $"`{n}`=@{n}"))} WHERE `{key.Name}`=@{key.Name};";
+            var query =
+                $"UPDATE {table} SET {string.Join(", ", updateFields.Select(n => $"`{n}`=@{n}"))} WHERE `{key.Name}`=@{key.Name};";
             return query;
         }
 
@@ -314,6 +334,7 @@ namespace DATN.Web.Repo.Repo
             var query = $"DELETE FROM {table} WHERE {key.Name} = @{key.Name};";
             return query;
         }
+
         #endregion
     }
 }
