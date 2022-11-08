@@ -40,8 +40,8 @@ namespace DATN.Web.Api.Controllers
         /// <summary>
         /// Get List Voucher
         /// </summary>
-        [HttpGet("getListVoucher")]
-        public async Task<IActionResult> GetListVoucher()
+        [HttpGet("listVoucher")]
+        public async Task<IActionResult> ListVoucher()
         {
             try
             {
