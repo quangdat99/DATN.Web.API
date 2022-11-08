@@ -24,6 +24,11 @@ namespace DATN.Web.Repo.Repo
         {
         }
 
+        /// <summary>
+        /// Lấy danh sách đơn hàng theo trạng thái của khách hàng
+        /// </summary>
+        /// <param name="listOrder"></param>
+        /// <returns></returns>
         public async Task<List<OrderEntity>> GetListOrder(ListOrder listOrder)
         {
             var sql = string.Format(@"SELECT * FROM {0}

@@ -25,17 +25,19 @@ namespace DATN.Web.Api.Controllers
         /// Repo đơn hàng
         /// </summary>
         IOrderRepo _orderRepo;
+
         /// <summary>
         /// Hàm khởi tạo
         /// </summary>
         /// <param name="OrderService"></param>
         /// <param name="OrderRepo"></param>
-        public OrderController(IOrderService orderService, IOrderRepo orderRepo, IServiceProvider serviceProvider) : base(orderService, orderRepo, serviceProvider)
+        public OrderController(IOrderService orderService, IOrderRepo orderRepo, IServiceProvider serviceProvider) :
+            base(orderService, orderRepo, serviceProvider)
         {
             _orderService = orderService;
             _orderRepo = orderRepo;
         }
-        
+
         /// <summary>
         /// Lấy danh sách đơn hàng theo trạng thái của một người dùng
         /// </summary>hàng
@@ -46,6 +48,34 @@ namespace DATN.Web.Api.Controllers
             try
             {
                 var res = await _orderService.GetListOrder(listOrder);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Hủy đơn hàng trong trạng thái chờ lấy hàng
+        /// </summary>hàng
+        /// <param name="cancelOrder">userId và trạng thái đơn </param>
+        [HttpPost("cancelOrder")]
+        public async Task<IActionResult> CancelOrder([FromBody] CancelOrder cancelOrder)
+        {
+            try
+            {
+                var res = await _orderService.CancelOrder(cancelOrder);
                 if (res != null)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);

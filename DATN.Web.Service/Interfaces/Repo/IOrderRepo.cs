@@ -1,10 +1,7 @@
-﻿using DATN.Web.Service.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Model;
 
 namespace DATN.Web.Service.Interfaces.Repo
 {

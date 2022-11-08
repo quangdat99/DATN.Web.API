@@ -1,17 +1,17 @@
 using System;
-using DATN.Web.Service.Constants;
 
 namespace DATN.Web.Service.DtoEdit
 {
-    public class ListOrder
+    public class CancelOrder
     {
         /// <summary>
         /// UserID
         /// </summary>
         public Guid user_id { get; set; }
+
         /// <summary>
-        /// Order Status
+        /// OrderID
         /// </summary>
-        public OrderStatus order_status { get; set; }
+        public Guid order_id { get; set; }
     }
 }
