@@ -1,11 +1,7 @@
-﻿using DATN.Web.Service.Contexts;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN.Web.Service.Interfaces.Service
 {
@@ -19,5 +15,11 @@ namespace DATN.Web.Service.Interfaces.Service
         /// </summary>
         /// <param name="model"></param>
         Task<Dictionary<string, object>> Login(LoginModel model);
+        
+        /// <summary>
+        /// Reset Password
+        /// </summary>
+        /// <param name="resetPassword"></param>
+        Task<UserEntity> ResetPassword(ResetPassword resetPassword);
     }
 }
