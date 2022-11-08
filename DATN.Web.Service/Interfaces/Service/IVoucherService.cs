@@ -12,5 +12,9 @@ namespace DATN.Web.Service.Interfaces.Service
     /// </summary>
     public interface IVoucherService : IBaseService
     {
+        /// <summary>
+        /// Get List Voucher
+        /// </summary>
+        Task<List<VoucherEntity>> GetListVoucher();
     }
 }
