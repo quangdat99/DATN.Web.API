@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Exceptions;
@@ -23,13 +24,19 @@ namespace DATN.Web.Service.Service
         public async Task<AddressEntity> CreateAddress(CreateAddress createAddress)
         {
             var existedAddress =
-                await _addressRepo.GetAsync<AddressEntity>("address_detail", createAddress.address_detail);
+                await _addressRepo.GetAsync<AddressEntity>("user_id", createAddress.user_id);
 
             if (existedAddress.Count != 0)
             {
-                throw new ValidateException("Your address has existed", "");
-            }
+                var existedDefaultAddress =
+                    existedAddress.FirstOrDefault(a => a.is_default);
 
+                if (existedDefaultAddress != null && createAddress.is_default)
+                {
+                    throw new ValidateException("Your default address has existed", "");
+                }
+            }
+            
             var newAddress = new AddressEntity();
             newAddress.address_id = Guid.NewGuid();
             newAddress.user_id = createAddress.user_id;
@@ -55,7 +62,7 @@ namespace DATN.Web.Service.Service
             {
                 throw new ValidateException("Your address doesn't exist", "");
             }
-            
+
             existedAddress.user_id = (updateAddress.user_id != null) ? updateAddress.user_id : existedAddress.user_id;
             existedAddress.province =
                 (updateAddress.province != null) ? updateAddress.province : existedAddress.province;
