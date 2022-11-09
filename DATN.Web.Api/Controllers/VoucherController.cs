@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DATN.Web.Service.Properties;
 
 namespace DATN.Web.Api.Controllers
 {
@@ -34,6 +35,33 @@ namespace DATN.Web.Api.Controllers
         {
             _voucherService = voucherService;
             _voucherRepo = voucherRepo;
+        }
+        
+        /// <summary>
+        /// Get List Voucher
+        /// </summary>
+        [HttpGet("listVoucher")]
+        public async Task<IActionResult> ListVoucher()
+        {
+            try
+            {
+                var res = await _voucherService.GetListVoucher();
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
         }
     }
 }
