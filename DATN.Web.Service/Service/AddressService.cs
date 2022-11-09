@@ -91,6 +91,11 @@ namespace DATN.Web.Service.Service
                 throw new ValidateException("Your address doesn't exist", "");
             }
 
+            if (existedAddress.is_default)
+            {
+                throw new ValidateException("You don't have permission to delete this address", "");
+            }
+
             await _addressRepo.DeleteAsync(existedAddress);
 
             return existedAddress;
