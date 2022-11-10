@@ -40,8 +40,6 @@ namespace DATN.Web.Service.Service
                 context.Avatar = user.avatar;
             }
 
-            ;
-
             var jwtTokenConfig =
                 JsonConvert.DeserializeObject<JwtTokenConfig>(_userRepo.GetConfiguration()
                     .GetConnectionString("JwtTokenConfig"));
