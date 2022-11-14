@@ -13,19 +13,23 @@ namespace DATN.Web.Repo.Mysql
         /// Lấy chuỗi kết nối dữ liệu
         /// </summary>
         string GetConnectionString();
+
         /// <summary>
         /// Lấy kết nối dữ liệu
         /// </summary>
         IDbConnection GetConnection();
+
         /// <summary>
         /// Lấy kết nối và mở luôn
         /// </summary>
         IDbConnection GetOpenConnection();
+
         /// <summary>
         /// Giải phóng connection
         /// </summary>
         /// <param name="connection">SQL connection</param>
         void CloseConnection(IDbConnection connection);
+
         /// <summary>
         /// Thực hiện sql trả về danh sách dữ liệu
         /// </summary>
@@ -33,7 +37,9 @@ namespace DATN.Web.Repo.Mysql
         /// <param name="commandText"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        Task<List<T>> QueryAsync<T>(string commandText, Dictionary<string, object> param, CommandType commandType = CommandType.Text);
+        Task<List<T>> QueryAsync<T>(string commandText, Dictionary<string, object> param,
+            CommandType commandType = CommandType.Text);
+
 
         /// <summary>
         /// Thực hiện sql trả về danh sách dữ liệu
@@ -43,7 +49,8 @@ namespace DATN.Web.Repo.Mysql
         /// <param name="commandText"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        Task<List<T>> QueryAsync<T>(IDbConnection cnn, string commandText, Dictionary<string, object> param, CommandType commandType = CommandType.Text);
+        Task<List<T>> QueryAsync<T>(IDbConnection cnn, string commandText, Dictionary<string, object> param,
+            CommandType commandType = CommandType.Text);
 
         /// <summary>
         /// Thực hiện sql trả về dữ liệu cell đầu tiên
@@ -67,6 +74,7 @@ namespace DATN.Web.Repo.Mysql
         /// <param name="param">Tham số</param>
         /// <returns></returns>
         Task<int> ExecuteNoneQueryTextAsync(string commandText, object param);
+
         /// <summary>
         /// Thực hiện sql trả về row effect
         /// </summary>
