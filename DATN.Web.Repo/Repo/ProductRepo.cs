@@ -1,13 +1,11 @@
-﻿using DATN.Web.Service.DtoEdit;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Model;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN.Web.Repo.Repo
 {
@@ -22,7 +20,6 @@ namespace DATN.Web.Repo.Repo
         /// <param name="configuration">Config của project</param>
         public ProductRepo(IConfiguration configuration) : base(configuration)
         {
-
         }
 
         public async Task<ProductInfo> GetProductInfo(Guid id)
@@ -35,6 +32,24 @@ namespace DATN.Web.Repo.Repo
                 result.ProductDetails = await this.GetAsync<ProductDetailEntity>("product_id", result.product_id);
                 result.Attributes = await this.GetAsync<AttributeEntity>("product_id", result.product_id);
             }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get List Of Products
+        /// </summary>
+        /// <param name="productIds">Product Ids</param>
+        public async Task<List<ProductEntity>> GetListProductInfo(List<Guid> productIds)
+        {
+            var sql = (@"SELECT * FROM  `product` WHERE product_id IN (@ids)");
+
+            var ids = string.Join(",", productIds);
+            var param = new Dictionary<string, object>
+            {
+                { "ids", ids },
+            };
+            var result = await Provider.QueryAsync<ProductEntity>(sql, param);
             return result;
         }
     }

@@ -26,12 +26,14 @@ namespace DATN.Web.Api.Controllers
         /// Repo  Sản phẩm
         /// </summary>
         IProductRepo _productRepo;
+
         /// <summary>
         /// Hàm khởi tạo
         /// </summary>
         /// <param name="ProductService"></param>
         /// <param name="ProductRepo"></param>
-        public ProductController(IProductService productService, IProductRepo productRepo, IServiceProvider serviceProvider) : base(productService, productRepo, serviceProvider)
+        public ProductController(IProductService productService, IProductRepo productRepo,
+            IServiceProvider serviceProvider) : base(productService, productRepo, serviceProvider)
         {
             _productService = productService;
             _productRepo = productRepo;
@@ -64,5 +66,33 @@ namespace DATN.Web.Api.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Get List Of Products
+        /// </summary>
+        /// <param name="cart_id">Cart Id</param>
+        [HttpGet("listProduct/{cart_id}")]
+        public async Task<IActionResult> GetListProduct(Guid cart_id)
+        {
+            try
+            {
+                var res = await _productService.GetListProductFromCart(cart_id);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<UserEntity>());
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<UserEntity>());
+                return Ok(actionResult);
+            }
+        }
     }
 }
