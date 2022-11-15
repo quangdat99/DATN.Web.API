@@ -18,10 +18,12 @@ namespace DATN.Web.Service.Model
         /// <summary>
         [Key]
         public Guid product_cart_id { get; set; }
+
         /// <summary>
         /// Định danh giỏ hàng
         /// <summary>
         public Guid cart_id { get; set; }
+
         /// <summary>
         /// Định danh của sản phẩm
         /// <summary>

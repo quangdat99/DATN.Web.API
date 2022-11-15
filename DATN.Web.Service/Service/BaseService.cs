@@ -11,13 +11,16 @@ namespace DATN.Web.Service.Service
     public class BaseService : IBaseService
     {
         #region DECLARE
+
         /// <summary>
         /// Base repo
         /// </summary>
         IBaseRepo _baseRepo;
+
         #endregion
 
         #region CONSTRUCTOR
+
         /// <summary>
         /// Phương thức khởi tạo
         /// </summary>
@@ -26,6 +29,11 @@ namespace DATN.Web.Service.Service
         {
             _baseRepo = baseRepo;
         }
+
+        public BaseService()
+        {
+        }
+
         #endregion
 
         public async Task<object> InsertAsync<T>(object entity)

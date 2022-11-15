@@ -18,5 +18,11 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// </summary>
         /// <param name="id">id sản phẩm</param>
         Task<ProductInfo> GetProductInfo(Guid id);
+
+        /// <summary>
+        /// Get List Of Products
+        /// </summary>
+        /// <param name="productIds">Product Ids</param>
+        Task<List<ProductEntity>> GetListProductInfo(List<Guid> productIds);
     }
 }

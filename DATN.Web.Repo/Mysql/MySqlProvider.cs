@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using MySqlConnector;
@@ -16,10 +12,12 @@ namespace DATN.Web.Repo.Mysql
     public class MySqlProvider : IDataBaseProvider
     {
         private readonly string _connectionString;
+
         public MySqlProvider(string connectionString)
         {
             _connectionString = connectionString;
         }
+
         public virtual void CloseConnection(IDbConnection connection)
         {
             if (connection != null)
@@ -47,7 +45,8 @@ namespace DATN.Web.Repo.Mysql
             return cnn;
         }
 
-        public async Task<List<T>> QueryAsync<T>(string commandText, Dictionary<string, object> param, CommandType commandType = CommandType.Text)
+        public async Task<List<T>> QueryAsync<T>(string commandText, Dictionary<string, object> param,
+            CommandType commandType = CommandType.Text)
         {
             IDbConnection cnn = null;
             try
@@ -61,12 +60,14 @@ namespace DATN.Web.Repo.Mysql
             }
         }
 
-        public async Task<List<T>> QueryAsync<T>(IDbConnection cnn, string commandText, Dictionary<string, object> param, CommandType commandType = CommandType.Text)
+        public async Task<List<T>> QueryAsync<T>(IDbConnection cnn, string commandText,
+            Dictionary<string, object> param, CommandType commandType = CommandType.Text)
         {
             var dynamicParams = this.GetParameters(param);
             var result = await cnn.QueryAsync<T>(commandText, dynamicParams, commandType: commandType);
             return result.AsList();
         }
+
         /// <summary>
         /// Tạo tham số query
         /// </summary>
@@ -83,6 +84,7 @@ namespace DATN.Web.Repo.Mysql
                     result.Add(item.Key, value: value);
                 }
             }
+
             return result;
         }
 
