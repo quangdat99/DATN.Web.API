@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Model;
@@ -21,5 +22,11 @@ namespace DATN.Web.Service.Interfaces.Service
         /// </summary>
         /// <param name="cancelOrder"></param>
         Task<OrderEntity> CancelOrder(CancelOrder cancelOrder);
+
+        /// <summary>
+        /// Order Payment
+        /// </summary>
+        /// <param name="orderPayment"></param>
+        Task<OrderEntity> OrderPayment(OrderPayment orderPayment, Guid user_id, Guid cart_id);
     }
 }

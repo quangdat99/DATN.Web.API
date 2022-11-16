@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DATN.Web.Service.Constants;
 
 namespace DATN.Web.Service.Model
 {
@@ -18,13 +19,20 @@ namespace DATN.Web.Service.Model
         /// <summary>
         [Key]
         public Guid voucher_user_id { get; set; }
+
         /// <summary>
         /// Định danh của mã giảm giá
         /// <summary>
         public Guid voucher_id { get; set; }
+
         /// <summary>
         /// Định danh của người dùng
         /// <summary>
         public Guid user_id { get; set; }
+        
+        /// <summary>
+        /// Voucher Status
+        /// <summary>
+        public VoucherStatus VoucherStatus { get; set; }
     }
 }

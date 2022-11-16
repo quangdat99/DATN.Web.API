@@ -93,5 +93,35 @@ namespace DATN.Web.Api.Controllers
                 return Ok(actionResult);
             }
         }
+        
+        /// <summary>
+        /// Order Payment
+        /// </summary>
+        /// <param name="orderPayment"></param>
+        [HttpPost("payOrder/{order_id}")]
+        public async Task<IActionResult> CancelOrder([FromBody] OrderPayment orderPayment, Guid order_id)
+        {
+            var context = _contextService.Get();
+            try
+            {
+                var userInfo = await _orderRepo.GetByIdAsync<UserEntity>(context.UserId);
+                var res = await _orderService.OrderPayment(orderPayment, context.UserId, userInfo.cart_id);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
     }
 }

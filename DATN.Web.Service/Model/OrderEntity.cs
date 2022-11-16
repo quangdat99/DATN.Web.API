@@ -20,6 +20,11 @@ namespace DATN.Web.Service.Model
         /// Định danh của người dùng
         /// <summary>
         public Guid user_id { get; set; }
+        
+        /// <summary>
+        /// Định danh mã giảm giá
+        /// <summary>
+        public Guid voucher_user_id{ get; set; }
 
         /// <summary>
         /// Tổng số tiền của đơn hàng
