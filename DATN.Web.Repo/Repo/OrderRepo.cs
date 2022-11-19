@@ -44,7 +44,6 @@ namespace DATN.Web.Repo.Repo
                 },
             };
 
-            OrderStatus orderStatus;
             if (!Enum.IsDefined(typeof(OrderStatus), listOrder.order_status))
             {
                 throw new ValidateException("Invalid status", "");
@@ -52,6 +51,49 @@ namespace DATN.Web.Repo.Repo
 
             var result = await Provider.QueryAsync<OrderEntity>(sql, param);
             return result?.ToList();
+        }
+
+        /// <summary>
+        /// Delete List Product Cart
+        /// </summary>
+        /// <param name="cartId">CartId </param>
+        /// <param name="productIds">CartId </param>
+        public async Task<List<ProductCartEntity>> DeleteListProductCart(List<Guid> productIds, Guid cartId)
+        {
+            var sql = (@"DELETE FROM  `product_cart` WHERE cart_id = @cartId AND product_id IN (@ids)");
+
+            var ids = string.Join(",", productIds);
+            var param = new Dictionary<string, object>
+            {
+                { "cartId", cartId },
+                { "ids", ids }
+            };
+            var result = await Provider.QueryAsync<ProductCartEntity>(sql, param);
+            return result;
+        }
+
+        /// <summary>
+        /// Get Voucher User
+        /// </summary>
+        /// <param name="user_id">CartId </param>
+        /// <param name="voucher_id">CartId </param>
+        public async Task<VoucherUserEntity> GetVoucherUser(Guid voucher_id, Guid user_id)
+        {
+            var sql = string.Format(@"SELECT * FROM {0}
+         WHERE user_id=@user_id AND voucher_id=@voucher_id",
+                GetTableName(typeof(VoucherUserEntity)));
+
+
+            var param = new Dictionary<string, object>
+            {
+                { "user_id", user_id },
+                {
+                    "voucher_id", voucher_id
+                },
+            };
+
+            var result = await Provider.QueryAsync<VoucherUserEntity>(sql, param);
+            return result?.FirstOrDefault();
         }
     }
 }
