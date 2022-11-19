@@ -15,7 +15,12 @@ namespace DATN.Web.Service.Interfaces.Service
         /// </summary>
         /// <param name="model"></param>
         Task<Dictionary<string, object>> Login(LoginModel model);
-        
+        /// <summary>
+        /// Đăng ký
+        /// </summary>
+        /// <param name="model"></param>
+        Task<DAResult> Signup(SignupModel model);
+
         /// <summary>
         /// Reset Password
         /// </summary>

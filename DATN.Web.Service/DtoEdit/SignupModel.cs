@@ -1,23 +1,42 @@
 ﻿using System;
-using DATN.Web.Service.Attributes;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DATN.Web.Service.Model
+namespace DATN.Web.Service.DtoEdit
 {
-    /// <summary>
-    /// Bảng thông tin địa chỉ của người dùng
-    /// <summary>
-    [Table("address")]
-    public class AddressEntity
+    public class SignupModel
     {
         /// <summary>
-        /// Định danh địa chỉ
+        /// Họ người dùng
         /// <summary>
-        [Key]
-        public Guid address_id { get; set; }
+        public string first_name { get; set; }
+
         /// <summary>
-        /// Định danh của người dùng
+        /// Tên người dùng
         /// <summary>
-        public Guid user_id { get; set; }
+        public string last_name { get; set; }
+
+        /// <summary>
+        /// Địa chỉ email của người dùng
+        /// <summary>
+        public string email { get; set; }
+
+        /// <summary>
+        /// Mật khẩu đăng nhập
+        /// <summary>
+        public string password { get; set; }
+
+        /// <summary>
+        /// Số điện thoại người dùng
+        /// <summary>
+        public int phone { get; set; }
+
+        /// <summary>
+        /// Đường dẫn ảnh đại diện
+        /// <summary>
+        public string avatar { get; set; }
         /// <summary>
         /// Tỉnh/ thành phố
         /// <summary>
@@ -46,9 +65,5 @@ namespace DATN.Web.Service.Model
         /// Địa chỉ chi tiết
         /// <summary>
         public string address_detail { get; set; }
-        /// <summary>
-        /// Có là địa chỉ mặc định không
-        /// <summary>
-        public bool is_default { get; set; }
     }
 }

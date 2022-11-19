@@ -1,5 +1,6 @@
 ﻿using System;
 using DATN.Web.Service.Attributes;
+using DATN.Web.Service.Constants;
 
 namespace DATN.Web.Service.Model
 {
@@ -48,12 +49,12 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Quyển người dùng (Người mua hàng, Quản trị hệ thống)
         /// <summary>
-        public int role { get; set; }
+        public Role role { get; set; }
 
         /// <summary>
         /// Có bị chặn hoạt động hay không
         /// <summary>
-        public int is_block { get; set; }
+        public bool is_block { get; set; }
 
         /// <summary>
         /// Định danh giỏ hàng

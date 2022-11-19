@@ -37,7 +37,7 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// Thêm dữ liệu
         /// </summary>
         /// <param name="entity">dữu liệu</param>
-        Task<object> InsertAsync<T>(object entity);
+        Task<T> InsertAsync<T>(object entity);
 
         /// <summary>
         /// Sửa dữ liệu
@@ -45,7 +45,7 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// <param name="entity">dữ liệu</param>
         /// <param name="fields">Danh sách các trường cập nhật</param>
         /// <returns></returns>
-        Task<object> UpdateAsync<T>(object entity, string fields = null);
+        Task<T> UpdateAsync<T>(object entity, string fields = null);
 
         /// <summary>
         /// Xóa dữu liệu

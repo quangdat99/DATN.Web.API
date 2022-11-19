@@ -123,6 +123,24 @@ namespace DATN.Web.Api.Controllers
         }
 
         /// <summary>
+        /// Đăng nhập
+        /// </summary>
+        [HttpPost("signup")]
+        public async Task<IActionResult> Signup([FromBody] SignupModel model)
+        {
+            try
+            {
+                var res = await _userService.Signup(model);
+                return Ok(res);
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
         /// Reset Password
         /// </summary>
         [HttpPost("resetPassword")]

@@ -117,43 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDataFail" xml:space="preserve">
-    <value>Thêm mới không thành công</value>
+  <data name="ExistEmail" xml:space="preserve">
+    <value>205</value>
+    <comment>Email này đã tồn tại</comment>
   </data>
-  <data name="addDataSuccess" xml:space="preserve">
-    <value>Thêm dữ liệu thành công</value>
-  </data>
-  <data name="deleteDataFail" xml:space="preserve">
-    <value>Xóa không thành công</value>
-  </data>
-  <data name="deleteDataSuccess" xml:space="preserve">
-    <value>Xóa dữ liệu thành công</value>
-  </data>
-  <data name="editDataFail" xml:space="preserve">
-    <value>Sửa không thành công</value>
-  </data>
-  <data name="editDataSuccess" xml:space="preserve">
-    <value>Sửa dữ liệu thành công</value>
-  </data>
-  <data name="error" xml:space="preserve">
-    <value>Có lỗi xảy ra, vui lòng liên hệ tác giả để được trợ giúp</value>
-  </data>
-  <data name="getDataSuccess" xml:space="preserve">
-    <value>Lấy dữ liệu thành công</value>
-  </data>
-  <data name="msgExistEmail" xml:space="preserve">
-    <value>Email này đã tồn tại, vui lòng sử dụng Email khác để đăng ký tài khoản.</value>
-  </data>
-  <data name="msgExistPhone" xml:space="preserve">
-    <value>Số điện thoại này đã tồn tại, vui lòng sử dụng Số điện thoại khác để đăng ký tài khoản.</value>
-  </data>
-  <data name="noData" xml:space="preserve">
-    <value>Không có dữ liệu</value>
-  </data>
-  <data name="noReturnData" xml:space="preserve">
-    <value>Không có dữ liệu trả về</value>
-  </data>
-  <data name="signupSuccess" xml:space="preserve">
-    <value>Đăng ký tài khoản thành công</value>
+  <data name="ExistPhone" xml:space="preserve">
+    <value>206</value>
+    <comment>Phone này đã tồn tại</comment>
   </data>
 </root>

@@ -19,7 +19,7 @@ namespace DATN.Web.Service.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -133,6 +133,24 @@ namespace DATN.Web.Service.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email này đã tồn tại, vui lòng sử dụng Email khác để đăng ký tài khoản..
+        /// </summary>
+        public static string msgExistEmail {
+            get {
+                return ResourceManager.GetString("msgExistEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số điện thoại này đã tồn tại, vui lòng sử dụng Số điện thoại khác để đăng ký tài khoản..
+        /// </summary>
+        public static string msgExistPhone {
+            get {
+                return ResourceManager.GetString("msgExistPhone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Không có dữ liệu.
         /// </summary>
         public static string noData {
@@ -147,6 +165,15 @@ namespace DATN.Web.Service.Properties {
         public static string noReturnData {
             get {
                 return ResourceManager.GetString("noReturnData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đăng ký tài khoản thành công.
+        /// </summary>
+        public static string signupSuccess {
+            get {
+                return ResourceManager.GetString("signupSuccess", resourceCulture);
             }
         }
     }

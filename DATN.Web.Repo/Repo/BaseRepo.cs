@@ -102,7 +102,7 @@ namespace DATN.Web.Repo.Repo
             return result;
         }
 
-        public async Task<object> InsertAsync<T>(object entity)
+        public async Task<T> InsertAsync<T>(object entity)
         {
             var query = this.GetInsertQuery(entity.GetType(), entity);
             var res = await this.Provider.ExcuteScalarTextAsync(query, entity);
@@ -120,7 +120,7 @@ namespace DATN.Web.Repo.Repo
             return default(T);
         }
 
-        public async Task<object> UpdateAsync<T>(object entity, string fields = null)
+        public async Task<T> UpdateAsync<T>(object entity, string fields = null)
         {
             var query = this.GetUpdateQuery(entity.GetType(), entity, fields);
             var res = await this.Provider.ExecuteNoneQueryTextAsync(query, entity);
@@ -133,7 +133,7 @@ namespace DATN.Web.Repo.Repo
                 }
             }
 
-            return null;
+            return default(T);
         }
 
         public string GetTableName(Type type)
