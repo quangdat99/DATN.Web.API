@@ -9,6 +9,7 @@ using System.Data;
 using DATN.Web.Service.Model;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Exceptions;
+using DATN.Web.Service.Properties;
 
 namespace DATN.Web.Repo.Repo
 {
@@ -57,14 +58,14 @@ namespace DATN.Web.Repo.Repo
             var res = result?.FirstOrDefault();
             if (res == null)
             {
-                throw new ValidateException("User not found", "");
+                throw new ValidateException("Tài khoản không tồn tại, vui lòng kiểm tra lại", model, int.Parse(ResultCode.WrongAccount));
             }
 
 
             var verified = BCrypt.Net.BCrypt.Verify(model.password, res.password);
             if (!verified)
             {
-                throw new ValidateException("Wrong password", "");
+                throw new ValidateException("Mật khẩu không chính xác, vui lòng kiểm tra lại", model, int.Parse(ResultCode.WrongPassword));
             }
             return result.FirstOrDefault();
 

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Interfaces.Repo;
@@ -25,10 +28,15 @@ namespace DATN.Web.Repo.Repo
         public async Task<ProductInfo> GetProductInfo(Guid id)
         {
             var result = new ProductInfo();
-            var master = await this.GetByIdAsync<ProductEntity>(id);
-            if (master != null)
+
+            var param = new Dictionary<string, object>()
             {
-                result = JsonConvert.DeserializeObject<ProductInfo>(JsonConvert.SerializeObject(master));
+                { "$productId", id },
+            };
+            result = (await this.Provider.QueryAsync<ProductInfo>("Proc_ProductInfo",
+                param, CommandType.StoredProcedure)).FirstOrDefault();
+            if (result != null)
+            {
                 result.ProductDetails = await this.GetAsync<ProductDetailEntity>("product_id", result.product_id);
                 result.Attributes = await this.GetAsync<AttributeEntity>("product_id", result.product_id);
             }
@@ -51,6 +59,24 @@ namespace DATN.Web.Repo.Repo
             };
             var result = await Provider.QueryAsync<ProductEntity>(sql, param);
             return result;
+        }
+
+        public async Task<List<ProductClient>> GetProductHome(SearchModel model)
+        {
+            var param = new Dictionary<string, object>()
+            {
+                { "$keyword", model.keyword },
+                { "$rating", model.rating },
+                { "$fromAmount", model.fromAmount },
+                { "$toAmount", model.toAmount },
+                { "$category", model.category },
+                { "$sort", model.sort },
+                { "$page", model.page },
+                { "$pageSize", model.pageSize },
+            };
+            var res = await this.Provider.QueryAsync<ProductClient>("Proc_GetProductHome",
+                param, CommandType.StoredProcedure);
+            return res;
         }
     }
 }

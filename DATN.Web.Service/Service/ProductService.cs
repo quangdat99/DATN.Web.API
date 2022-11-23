@@ -69,12 +69,12 @@ namespace DATN.Web.Service.Service
                 throw new ValidateException("Your product detail doesn't exist", "");
             }
 
-            existedProductDetail.size_id = (customerUpdateProductDetail.size_id != null)
-                ? customerUpdateProductDetail.size_id
-                : existedProductDetail.size_id;
-            existedProductDetail.color_id = (customerUpdateProductDetail.color_id != null)
-                ? customerUpdateProductDetail.color_id
-                : existedProductDetail.color_id;
+            existedProductDetail.size_name = (customerUpdateProductDetail.size_name != null)
+                ? customerUpdateProductDetail.size_name
+                : existedProductDetail.size_name;
+            existedProductDetail.color_name = (customerUpdateProductDetail.color_name != null)
+                ? customerUpdateProductDetail.color_name
+                : existedProductDetail.color_name;
 
             if (customerUpdateProductDetail.quantity > 0)
             {
@@ -130,6 +130,12 @@ namespace DATN.Web.Service.Service
             }
 
             return existedProductList;
+        }
+
+        public async Task<List<ProductClient>> GetProductHome(SearchModel model)
+        {
+            var products = await _productRepo.GetProductHome(model);
+            return products;
         }
     }
 }

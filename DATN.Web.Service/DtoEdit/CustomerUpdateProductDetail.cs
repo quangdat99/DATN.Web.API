@@ -6,14 +6,14 @@ namespace DATN.Web.Service.DtoEdit
     public class CustomerUpdateProductDetail
     {
         /// <summary>
-        /// Định danh kích cỡ của sản phẩm
+        /// kích cỡ của sản phẩm
         /// <summary>
-        public Guid? size_id { get; set; }
+        public string size_name { get; set; }
 
         /// <summary>
-        ///  Định danh màu sắc của sản phẩm
+        ///  màu sắc của sản phẩm
         /// <summary>
-        public Guid? color_id { get; set; }
+        public string color_name { get; set; }
 
         /// <summary>
         /// Số lượng hiện tại của sản phẩm

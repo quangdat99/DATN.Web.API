@@ -40,7 +40,34 @@ namespace DATN.Web.Api.Controllers
         }
 
         /// <summary>
-        /// Lấy Thông tin người dùng
+        /// Lấy danh sách sản phẩm trang home page có tìm kiếm, sắp xếp,...
+        /// </summary>
+        [HttpPost("homepage")]
+        public async Task<IActionResult> GetProductHome(SearchModel model)
+        {
+            try
+            {
+                var res = await _productService.GetProductHome(model);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<ProductClient>());
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<ProductClient>());
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Lấy Thông tin sản phẩm
         /// </summary>
         [HttpGet("info/{id}")]
         public async Task<IActionResult> GetProductInfo(Guid id)

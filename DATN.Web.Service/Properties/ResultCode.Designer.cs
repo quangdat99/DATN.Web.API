@@ -77,5 +77,23 @@ namespace DATN.Web.Service.Properties {
                 return ResourceManager.GetString("ExistPhone", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 208.
+        /// </summary>
+        public static string WrongAccount {
+            get {
+                return ResourceManager.GetString("WrongAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 207.
+        /// </summary>
+        public static string WrongPassword {
+            get {
+                return ResourceManager.GetString("WrongPassword", resourceCulture);
+            }
+        }
     }
 }

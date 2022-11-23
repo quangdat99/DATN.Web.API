@@ -125,4 +125,12 @@
     <value>206</value>
     <comment>Phone này đã tồn tại</comment>
   </data>
+  <data name="WrongAccount" xml:space="preserve">
+    <value>208</value>
+    <comment>Tài khoản không tồn tại</comment>
+  </data>
+  <data name="WrongPassword" xml:space="preserve">
+    <value>207</value>
+    <comment>Mật khẩu không chính xác</comment>
+  </data>
 </root>

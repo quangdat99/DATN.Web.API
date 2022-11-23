@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Exceptions;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
@@ -114,6 +115,12 @@ namespace DATN.Web.Api.Controllers
                     var actionResult = new DAResult(204, Resources.noReturnData, "", null);
                     return Ok(actionResult);
                 }
+            }
+            catch (ValidateException exception)
+            {
+                var actionResult = new DAResult(exception.resultCode, exception.Message, "", exception.DataErr);
+                return Ok(actionResult);
+
             }
             catch (Exception exception)
             {

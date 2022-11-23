@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DATN.Web.Service.DtoEdit
 {
-    public class ProductInfo : ProductEntity
+    public class ProductInfo : ProductClient
     {
         public List<ProductDetailEntity> ProductDetails { get; set; }
         public List<AttributeEntity> Attributes { get; set; }

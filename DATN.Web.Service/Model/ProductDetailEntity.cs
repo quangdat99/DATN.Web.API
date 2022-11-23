@@ -40,18 +40,30 @@ namespace DATN.Web.Service.Model
         public decimal purchase_price { get; set; }
 
         /// <summary>
-        /// Định danh kích cỡ của sản phẩm
+        /// Kích cỡ của sản phẩm
         /// <summary>
-        public Guid? size_id { get; set; }
+        public string size_name { get; set; }
 
         /// <summary>
-        ///  Định danh màu sắc của sản phẩm
+        ///  Màu sắc của sản phẩm
         /// <summary>
-        public Guid? color_id { get; set; }
+        public string color_name { get; set; }
 
         /// <summary>
         /// Số lượng hiện tại của sản phẩm
         /// <summary>
         public int quantity { get; set; }
+        /// <summary>
+        /// Ngày tạo
+        /// </summary>
+        public DateTime created_date { get; set; }
+        /// <summary>
+        /// Giảm giáo bao nhiêu %
+        /// </summary>
+        public decimal? product_discount { get; set; }
+        /// <summary>
+        /// Giá cũ
+        /// </summary>
+        public decimal sale_price_old { get; set; }
     }
 }

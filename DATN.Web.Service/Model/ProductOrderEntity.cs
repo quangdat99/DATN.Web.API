@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace DATN.Web.Service.Model
 {
     /// <summary>
-    /// Đinh jdanh thông tin giao tiếp sản phẩm và đơn hàng
+    /// Định danh thông tin giao tiếp sản phẩm và đơn hàng
     /// <summary>
     [Table("product_order")]
     public class ProductOrderEntity
@@ -23,8 +23,36 @@ namespace DATN.Web.Service.Model
         /// <summary>
         public Guid order_id { get; set; }
         /// <summary>
-        /// Đinh danh sản phẩm
+        /// Đinh danh loại sản phẩm
         /// <summary>
         public Guid product_id { get; set; }
+        /// <summary>
+        /// Đinh danh sản phẩm
+        /// <summary>
+        public Guid product_detail_id { get; set; }
+        /// <summary>
+        /// 
+        /// <summary>
+        public decimal? product_amount { get; set; }
+        /// <summary>
+        /// 
+        /// <summary>
+        public string? product_name { get; set; }
+        /// <summary>
+        /// 
+        /// <summary>
+        public string? color_name { get; set; }
+        /// <summary>
+        /// 
+        /// <summary>
+        public string? size_name { get; set; }
+        /// <summary>
+        /// 
+        /// <summary>
+        public string? url_img { get; set; }
+        /// <summary>
+        /// Số lượng sp
+        /// </summary>
+        public int quantity { get; set; }
     }
 }

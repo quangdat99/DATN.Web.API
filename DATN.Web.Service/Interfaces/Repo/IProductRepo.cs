@@ -24,5 +24,10 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// </summary>
         /// <param name="productIds">Product Ids</param>
         Task<List<ProductEntity>> GetListProductInfo(List<Guid> productIds);
+
+        /// <summary>
+        /// Lấy danh sách sản phẩm trang home page có tìm kiếm, sắp xếp,...
+        /// </summary>
+        Task<List<ProductClient>> GetProductHome(SearchModel model);
     }
 }

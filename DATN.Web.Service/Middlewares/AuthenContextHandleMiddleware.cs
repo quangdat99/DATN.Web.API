@@ -113,7 +113,13 @@ namespace DATN.Web.Service.Middlewares
         /// <returns></returns>
         private bool NoRequestAuthentication(string path)
         {
-            var lstPath = new List<string> { "/api/Products/info", "/api/Users/login", "/api/Users/signup" };
+            var lstPath = new List<string> { 
+                "/api/Products/info", 
+                "/api/Users/login", 
+                "/api/Users/signup", 
+                "/api/Products/homepage",
+                "/api/Categorys",
+            };
             if (lstPath.Any(x => path.Contains(x)))
             {
                 return true;

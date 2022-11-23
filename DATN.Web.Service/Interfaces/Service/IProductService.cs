@@ -38,5 +38,9 @@ namespace DATN.Web.Service.Interfaces.Service
         /// <param name="newProductId">New Product Id</param>
         Task<List<ProductEntity>> AddSingleProductToCart(Guid cartId,
             Guid newProductId);
+        /// <summary>
+        /// Lấy danh sách sản phẩm trang home page có tìm kiếm, sắp xếp,...
+        /// </summary>
+        Task<List<ProductClient>> GetProductHome(SearchModel model);
     }
 }

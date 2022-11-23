@@ -153,9 +153,9 @@ namespace DATN.Web.Service.Service
             newUser.user_id = Guid.NewGuid();
             newUser.email = model.email;
             newUser.phone = model.phone;
-            newUser.password = model.password;
-            newUser.first_name = model.first_name;
-            newUser.last_name = model.last_name;
+            newUser.password = BCrypt.Net.BCrypt.HashPassword(model.password);
+            newUser.first_name = model.first_name.Trim();
+            newUser.last_name = model.last_name.Trim();
             newUser.avatar = model.avatar;
             newUser.is_block = false;
             newUser.role = Role.Customer;
