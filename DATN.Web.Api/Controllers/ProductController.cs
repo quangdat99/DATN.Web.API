@@ -92,7 +92,32 @@ namespace DATN.Web.Api.Controllers
                 return Ok(actionResult);
             }
         }
-
+        /// <summary>
+        /// Lấy Thông tin sản phẩm liên quan
+        /// </summary>
+        [HttpGet("relation/{id}/{mode}")]
+        public async Task<IActionResult> GetProductRelation(Guid id, int mode)
+        {
+            try
+            {
+                var res = await _productRepo.GetProductRelation(id, mode);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<ProductClient>());
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<ProductClient>());
+                return Ok(actionResult);
+            }
+        }
 
         /// <summary>
         /// Get List Of Products
@@ -208,6 +233,33 @@ namespace DATN.Web.Api.Controllers
             catch (Exception exception)
             {
                 var actionResult = new DAResult(500, Resources.error, exception.Message, new List<UserEntity>());
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Lấy Thông tin các option đánh giá của sản phẩm
+        /// </summary>
+        [HttpGet("rateOption/{id}")]
+        public async Task<IActionResult> GetRateOption(Guid id)
+        {
+            try
+            {
+                var res = await _productRepo.GetRateOption(id);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<object>());
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<object>());
                 return Ok(actionResult);
             }
         }

@@ -78,5 +78,29 @@ namespace DATN.Web.Repo.Repo
                 param, CommandType.StoredProcedure);
             return res;
         }
+
+        public async Task<List<ProductClient>> GetProductRelation(Guid id, int mode)
+        {
+            var param = new Dictionary<string, object>()
+            {
+                { "$product_id", id },
+                { "$orderby_created_date", mode == 1 },
+                { "$orderby_sell", mode == 2 },
+            };
+            var res = await this.Provider.QueryAsync<ProductClient>("Proc_GetProductRelation",
+                param, CommandType.StoredProcedure);
+            return res;
+        }
+
+        public async Task<List<object>> GetRateOption(Guid id)
+        {
+            var param = new Dictionary<string, object>()
+            {
+                { "$product_id", id },
+            };
+            var res = await this.Provider.QueryAsync<object>("Proc_GetRateOption",
+                param, CommandType.StoredProcedure);
+            return res;
+        }
     }
 }

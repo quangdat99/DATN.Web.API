@@ -29,5 +29,15 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// Lấy danh sách sản phẩm trang home page có tìm kiếm, sắp xếp,...
         /// </summary>
         Task<List<ProductClient>> GetProductHome(SearchModel model);
+
+        /// <summary>
+        /// Lấy danh sách sản phẩm liên quan
+        /// </summary>
+        Task<List<ProductClient>> GetProductRelation(Guid id, int mode);
+
+        /// <summary>
+        /// Lấy danh sách các option đánh giá của sp
+        /// </summary>
+        Task<List<object>> GetRateOption(Guid id);
     }
 }

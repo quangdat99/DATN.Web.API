@@ -119,6 +119,8 @@ namespace DATN.Web.Service.Middlewares
                 "/api/Users/signup", 
                 "/api/Products/homepage",
                 "/api/Categorys",
+                "/api/Products/relation",
+                "/api/Products/rateOption"
             };
             if (lstPath.Any(x => path.Contains(x)))
             {
