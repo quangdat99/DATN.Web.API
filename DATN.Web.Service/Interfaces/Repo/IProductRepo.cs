@@ -39,5 +39,10 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// Lấy danh sách các option đánh giá của sp
         /// </summary>
         Task<List<object>> GetRateOption(Guid id);
+
+        /// <summary>
+        /// Lấy danh sách bình luận của sản phẩm
+        /// </summary>
+        Task<List<object>> GetCommentProduct(Guid id, string filterCode, int pageNumber, int pageSize);
     }
 }

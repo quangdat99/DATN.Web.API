@@ -102,5 +102,19 @@ namespace DATN.Web.Repo.Repo
                 param, CommandType.StoredProcedure);
             return res;
         }
+
+        public async Task<List<object>> GetCommentProduct(Guid id, string filterCode, int pageNumber, int pageSize)
+        {
+            var param = new Dictionary<string, object>()
+            {
+                { "$product_id", id },
+                { "$filterCode", filterCode },
+                { "$pageNumber", pageNumber },
+                { "$pageSize", pageSize },
+            };
+            var res = await this.Provider.QueryAsync<object>("Proc_GetCommentProduct",
+                param, CommandType.StoredProcedure);
+            return res;
+        }
     }
 }

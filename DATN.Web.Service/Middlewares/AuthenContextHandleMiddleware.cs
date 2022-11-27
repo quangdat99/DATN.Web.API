@@ -120,7 +120,8 @@ namespace DATN.Web.Service.Middlewares
                 "/api/Products/homepage",
                 "/api/Categorys",
                 "/api/Products/relation",
-                "/api/Products/rateOption"
+                "/api/Products/rateOption",
+                "/api/Products/commentProduct",
             };
             if (lstPath.Any(x => path.Contains(x)))
             {
@@ -129,6 +130,7 @@ namespace DATN.Web.Service.Middlewares
             return false;
         }
     }
+    
 
     public static class SetAuthenContextHandlerExtensions
     {
