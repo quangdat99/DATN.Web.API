@@ -39,6 +39,7 @@ namespace DATN.Web.Service.Service
                 context.FirstName = user.first_name;
                 context.LastName = user.last_name;
                 context.Avatar = user.avatar;
+                context.CartId = user.cart_id;
             }
 
             var jwtTokenConfig =
@@ -69,7 +70,8 @@ namespace DATN.Web.Service.Service
                         Email = context.Email,
                         FirstName = context.FirstName,
                         LastName = context.LastName,
-                        Avatar = context.Avatar
+                        Avatar = context.Avatar,
+                        CartId = context.CartId
                     }
                 }
             };
@@ -195,6 +197,7 @@ namespace DATN.Web.Service.Service
                 context.FirstName = user.first_name;
                 context.LastName = user.last_name;
                 context.Avatar = user.avatar;
+                context.CartId = user.cart_id;
             }
 
             var jwtTokenConfig =

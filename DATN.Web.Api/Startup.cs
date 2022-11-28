@@ -62,6 +62,9 @@ namespace DATN.Web.Api
             services.AddScoped<ISizeService, SizeService>();
             services.AddScoped<ISizeRepo, SizeRepo>();
 
+            services.AddScoped<IProductCartService, ProductCartService>();
+            services.AddScoped<IProductCartRepo, ProductCartRepo>();
+
             services.AddScoped<IVoucherService, VoucherService>();
             services.AddScoped<IVoucherRepo, VoucherRepo>();
             services.AddScoped<IContextService, WebContextService>();
