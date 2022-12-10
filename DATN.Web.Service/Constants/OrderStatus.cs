@@ -11,19 +11,24 @@ namespace DATN.Web.Service.Constants
         All = 0,
 
         /// <summary>
+        /// chờ xác nhận
+        /// </summary>
+        Acceipt = 5,
+
+        /// <summary>
         /// chờ lấy hàng
         /// </summary>
-        Pending = 1,
+        Pending = 2,
 
         /// <summary>
         /// Đang giao
         /// </summary>
-        Delivering = 2,
+        Delivering = 3,
 
         /// <summary>
         /// Giao thành công
         /// </summary>
-        Delivered = 3,
+        Delivered = 1,
 
         /// <summary>
         /// Đã hủy đơn
@@ -31,8 +36,8 @@ namespace DATN.Web.Service.Constants
         Cancelled = 4,
 
         /// <summary>
-        /// Giao hàng thất bại
+        /// Giao hàng thất bại/Trả hàng
         /// </summary>
-        Undelivered = 5
+        Undelivered = 6
     }
 }

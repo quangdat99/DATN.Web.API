@@ -24,7 +24,7 @@ namespace DATN.Web.Service.Service
         /// Get List Orders
         /// </summary>
         /// <param name="listOrder"></param>
-        public async Task<List<OrderEntity>> GetListOrder(ListOrder listOrder)
+        public async Task<List<OrderDto>> GetListOrder(ListOrder listOrder)
         {
             var existedOrder = await _orderRepo.GetListOrder(listOrder);
             if (existedOrder == null || !existedOrder.Any())

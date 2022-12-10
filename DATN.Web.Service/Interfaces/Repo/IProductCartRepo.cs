@@ -12,5 +12,9 @@ namespace DATN.Web.Service.Interfaces.Repo
     /// </summary>
     public interface IProductCartRepo : IBaseRepo
     {
+        /// <summary>
+        /// Lấy danh sách sp trong giỏ hàng
+        /// </summary>
+        Task<List<object>> GetProductCart(Guid cartId);
     }
 }

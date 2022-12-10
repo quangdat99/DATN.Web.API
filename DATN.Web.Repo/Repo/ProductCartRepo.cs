@@ -1,7 +1,10 @@
-﻿using DATN.Web.Service.Interfaces.Repo;
+﻿using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Interfaces.Repo;
+using DATN.Web.Service.Model;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +23,18 @@ namespace DATN.Web.Repo.Repo
         public ProductCartRepo(IConfiguration configuration) : base(configuration)
         {
 
+        }
+
+        public async Task<List<object>> GetProductCart(Guid cartId)
+        {
+            var param = new Dictionary<string, object>()
+            {
+                { "$cartId", cartId },
+            };
+            var result = await this.Provider.QueryAsync<object>("Proc_ProductCart",
+                param, CommandType.StoredProcedure);
+
+            return result;
         }
     }
 }

@@ -1,22 +1,14 @@
-﻿using DATN.Web.Service.Attributes;
+﻿using DATN.Web.Service.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN.Web.Service.Model
+namespace DATN.Web.Service.DtoEdit
 {
-    /// <summary>
-    /// Bảng thông tin giao tiếp sản phẩm và giỏ hàng
-    /// <summary>
-    [Table("product_cart")]
-    public class ProductCartEntity
+    public class ProductCartDto : ProductEntity
     {
-        /// <summary>
-        /// Định danh thông tin giao tiếp sản phẩm và giỏ hàng
-        /// <summary>
-        [Key]
         public Guid product_cart_id { get; set; }
 
         /// <summary>
@@ -32,9 +24,5 @@ namespace DATN.Web.Service.Model
         /// Số lượng
         /// </summary>
         public decimal quantity { get; set; }
-        /// <summary>
-        /// Ngày tạo
-        /// </summary>
-        public DateTime created_date { get; set; }
     }
 }

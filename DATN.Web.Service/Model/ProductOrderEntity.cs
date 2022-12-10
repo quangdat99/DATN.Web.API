@@ -54,5 +54,10 @@ namespace DATN.Web.Service.Model
         /// Số lượng sp
         /// </summary>
         public int quantity { get; set; }
+
+        /// <summary>
+        /// Giá cũ
+        /// </summary>
+        public decimal product_amount_old { get; set; }
     }
 }

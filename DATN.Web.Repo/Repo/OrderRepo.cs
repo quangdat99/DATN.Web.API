@@ -8,6 +8,7 @@ using DATN.Web.Service.Exceptions;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Model;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace DATN.Web.Repo.Repo
 {
@@ -29,12 +30,19 @@ namespace DATN.Web.Repo.Repo
         /// </summary>
         /// <param name="listOrder"></param>
         /// <returns></returns>
-        public async Task<List<OrderEntity>> GetListOrder(ListOrder listOrder)
+        public async Task<List<OrderDto>> GetListOrder(ListOrder listOrder)
         {
-            var sql = string.Format(@"SELECT * FROM {0}
-         WHERE user_id=@user_id AND status=@status",
-                GetTableName(typeof(OrderEntity)));
+            var orders = new List<OrderDto>();
 
+            var sql = string.Format(@"SELECT * FROM {0}
+                WHERE user_id=@user_id",
+                GetTableName(typeof(OrderEntity)));
+            if (listOrder.order_status != OrderStatus.All)
+            {
+                sql += " AND status=@status";
+            }
+
+            sql += " ORDER BY created_date DESC LIMIT 10";
 
             var param = new Dictionary<string, object>
             {
@@ -48,9 +56,20 @@ namespace DATN.Web.Repo.Repo
             {
                 throw new ValidateException("Invalid status", "");
             }
-
             var result = await Provider.QueryAsync<OrderEntity>(sql, param);
-            return result?.ToList();
+            if (result != null)
+            {
+                orders = JsonConvert.DeserializeObject<List<OrderDto>>(JsonConvert.SerializeObject(result));
+                foreach (var order in orders)
+                {
+                    var products = await this.GetAsync<ProductOrderEntity>("order_id", order.order_id);
+                    if (products != null)
+                    {
+                        order.Products = products;
+                    }
+                }
+            }
+            return orders;
         }
 
         /// <summary>

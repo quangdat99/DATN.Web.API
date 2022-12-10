@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DATN.Web.Service.Constants;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
@@ -42,12 +43,17 @@ namespace DATN.Web.Api.Controllers
         /// Lấy danh sách đơn hàng theo trạng thái của một người dùng
         /// </summary>hàng
         /// <param name="listOrder">userId và trạng thái đơn </param>
-        [HttpPost("orderList")]
-        public async Task<IActionResult> GetOrderList([FromBody] ListOrder listOrder)
+        [HttpGet("orderList/{orderStatus}")]
+        public async Task<IActionResult> GetOrderList(OrderStatus orderStatus)
         {
+            var context = _contextService.Get();
             try
             {
-                var res = await _orderService.GetListOrder(listOrder);
+                var res = await _orderService.GetListOrder(new ListOrder()
+                {
+                    order_status = orderStatus,
+                    user_id = context.UserId
+                });
                 if (res != null)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);

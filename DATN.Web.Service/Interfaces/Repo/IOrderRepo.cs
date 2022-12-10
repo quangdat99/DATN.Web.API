@@ -16,7 +16,7 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// </summary>
         /// <param name="listOrder"></param>
         /// <returns></returns>
-        Task<List<OrderEntity>> GetListOrder(ListOrder listOrder);
+        Task<List<OrderDto>> GetListOrder(ListOrder listOrder);
 
         /// <summary>
         /// Delete List Product Cart

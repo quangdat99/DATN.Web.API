@@ -29,7 +29,7 @@ namespace DATN.Web.Service.Service
             var list = new List<Guid>();
             foreach (var p in res)
             {
-                list.Add(p.product_id);
+                list.Add(p.product_detail_id);
             }
 
             var listProduct = await _productRepo.GetListProductInfo(list);
@@ -124,7 +124,7 @@ namespace DATN.Web.Service.Service
                 var newProductCart = new ProductCartEntity();
                 newProductCart.product_cart_id = Guid.NewGuid();
                 newProductCart.cart_id = cartId;
-                newProductCart.product_id = newProductId;
+                newProductCart.product_detail_id = newProductId;
 
                 await _productRepo.InsertAsync<ProductCartEntity>(existedProductList);
             }

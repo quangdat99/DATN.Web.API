@@ -80,5 +80,9 @@ namespace DATN.Web.Service.Model
         /// Tổng số tiền của sản phẩm
         /// <summary>
         public decimal product_amount { get; set; }
+        /// <summary>
+        /// Mã đơn hàng
+        /// </summary>
+        public string order_code { get; set; }
     }
 }
