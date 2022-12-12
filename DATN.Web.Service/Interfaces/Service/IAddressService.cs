@@ -24,6 +24,14 @@ namespace DATN.Web.Service.Interfaces.Service
         /// Delete Address
         /// </summary>
         Task<AddressEntity> DeleteAddress(Guid address_id);
+        /// <summary>
+        /// set default address
+        /// </summary>
+        /// <param name="address_id"></param>
+        /// <returns></returns>
+        Task<int> SetDefaultAddressForUser(Guid user_id,Guid address_id);
+
+
 
 
     }

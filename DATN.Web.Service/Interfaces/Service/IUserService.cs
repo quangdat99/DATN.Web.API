@@ -26,5 +26,12 @@ namespace DATN.Web.Service.Interfaces.Service
         /// </summary>
         /// <param name="resetPassword"></param>
         Task<UserEntity> ResetPassword(ResetPassword resetPassword);
+
+        /// <summary>
+        /// update user info
+        /// </summary>
+        /// <param name="updateUser"></param>
+        /// <returns></returns>
+        Task<UserEntity> UpdateUser(UpdateUser updateUser);
     }
 }

@@ -47,6 +47,8 @@ namespace DATN.Web.Api.Controllers
         {
             try
             {
+                var contexData = _contextService.Get();
+                createAddress.user_id = contexData.UserId;
                 var res = await _addressService.CreateAddress(createAddress);
                 if (res != null)
                 {
@@ -76,6 +78,8 @@ namespace DATN.Web.Api.Controllers
         {
             try
             {
+                var contextService = _contextService.Get();
+                updateAddress.user_id = contextService.UserId;
                 var res = await _addressService.UpdateAddress(updateAddress, address_id);
                 if (res != null)
                 {
@@ -94,7 +98,37 @@ namespace DATN.Web.Api.Controllers
                 return Ok(actionResult);
             }
         }
-        
+
+        /// <summary>
+        /// Update An Address Of User
+        /// </summary>
+        /// <param name="updateAddress">UpdateAddress</param>
+        /// <param name="address_id">address_id</param>
+        [HttpPut("setDefaut/{address_id}")]
+        public async Task<IActionResult> SetDefaultAddressForUser( Guid address_id)
+        {
+            var context = _contextService.Get();
+            try
+            {
+                var res = await _addressService.SetDefaultAddressForUser(context.UserId, address_id);
+                if (res == 1)
+                {
+                    var actionResult = new DAResult(200, "cập nhật thành công", "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, "không phản hồi", "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
         /// <summary>
         /// Update An Address Of User
         /// </summary>

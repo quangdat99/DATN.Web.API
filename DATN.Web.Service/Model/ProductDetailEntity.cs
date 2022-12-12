@@ -27,7 +27,7 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Đường dẫn ảnh sản phẩm
         /// <summary>
-        public string? img_url { get; set; }
+        public string img_url { get; set; }
 
         /// <summary>
         /// Giá bán của sản phẩm

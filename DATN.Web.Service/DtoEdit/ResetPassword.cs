@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace DATN.Web.Service.DtoEdit
 {
@@ -12,12 +12,17 @@ namespace DATN.Web.Service.DtoEdit
         /// <summary>
         /// user_id
         /// </summary>
-        public string? email { get; set; }
+        public string email { get; set; }
 
         /// <summary>
         /// user_id
         /// </summary>
         public int? phone { get; set; }
+
+        /// <summary>
+        /// password hiện tại
+        /// </summary>
+        public string password { get; set; }
 
         /// <summary>
         /// new_password
