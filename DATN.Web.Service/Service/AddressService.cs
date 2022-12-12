@@ -23,20 +23,6 @@ namespace DATN.Web.Service.Service
         /// </summary>
         public async Task<AddressEntity> CreateAddress(CreateAddress createAddress)
         {
-            var existedAddress =
-                await _addressRepo.GetAsync<AddressEntity>("user_id", createAddress.user_id);
-
-            if (existedAddress.Count != 0)
-            {
-                var existedDefaultAddress =
-                    existedAddress.FirstOrDefault(a => a.is_default);
-
-                if (existedDefaultAddress != null && createAddress.is_default)
-                {
-                    throw new ValidateException("Your default address has existed", "");
-                }
-            }
-            
             var newAddress = new AddressEntity();
             newAddress.address_id = Guid.NewGuid();
             newAddress.user_id = createAddress.user_id;
@@ -47,6 +33,9 @@ namespace DATN.Web.Service.Service
             newAddress.is_default = createAddress.is_default;
 
             await _addressRepo.InsertAsync<AddressEntity>(newAddress);
+            if (newAddress.is_default){
+                var setDefaultRow = await _addressRepo.SetDefaultAddressForUser(createAddress.user_id, newAddress.address_id);
+            }
 
             return newAddress;
         }
@@ -76,6 +65,23 @@ namespace DATN.Web.Service.Service
             existedAddress.is_default = updateAddress.is_default;
 
             await _addressRepo.UpdateAsync<AddressEntity>(existedAddress);
+            // Nếu đặt là địa chỉ mặc định thì set lại default đối với user_id
+            if (existedAddress.is_default)
+            {
+                await _addressRepo.SetDefaultAddressForUser(existedAddress.user_id, existedAddress.address_id);
+            }
+            return existedAddress;
+        }
+
+        /// <summary>
+        /// set default address
+        /// </summary>
+        /// <param name="address_id"></param>
+        /// <returns></returns>
+        public  async Task<int> SetDefaultAddressForUser( Guid user_id,Guid address_id)
+        {
+            var existedAddress = await _addressRepo.SetDefaultAddressForUser(user_id,address_id);
+
             return existedAddress;
         }
 

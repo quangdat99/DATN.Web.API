@@ -150,20 +150,22 @@ namespace DATN.Web.Api.Controllers
         /// <summary>
         /// Reset Password
         /// </summary>
-        [HttpPost("resetPassword")]
+        [HttpPut("resetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPassword resetPassword)
         {
             try
             {
+                var contextService = _contextService.Get();
+                resetPassword.user_id = contextService.UserId;
                 var res = await _userService.ResetPassword(resetPassword);
                 if (res != null)
                 {
-                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    var actionResult = new DAResult(200, "Cập nhật mật khẩu thành công!", "", res);
                     return Ok(actionResult);
                 }
                 else
                 {
-                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    var actionResult = new DAResult(200, "Mật khẩu không chính xác, vui lòng kiểm tra lại!", "", null);
                     return Ok(actionResult);
                 }
             }
@@ -173,5 +175,36 @@ namespace DATN.Web.Api.Controllers
                 return Ok(actionResult);
             }
         }
+
+
+        /// <summary>
+        /// Reset Password
+        /// </summary>
+        [HttpPut("update")]
+        public async Task<IActionResult> updateUser([FromBody] UpdateUser userUpdate)
+        {
+            try
+            {
+                var contextService = _contextService.Get();
+                userUpdate.user_id = contextService.UserId;
+                var res = await _userService.UpdateUser(userUpdate);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, "Cập nhật thông tin tài khoản thành công!", "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, "Cập nhật thất bại!", "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
     }
 }

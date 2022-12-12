@@ -18,12 +18,12 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Tên mã giảm giá
         /// <summary>
-        public string? voucher_code { get; set; }
+        public string voucher_code { get; set; }
 
         /// <summary>
         /// Thông tin mô tả chi tiết về mã giảm giá
         /// <summary>
-        public string? description { get; set; }
+        public string description { get; set; }
 
         /// <summary>
         /// Số phần trăm giảm giá

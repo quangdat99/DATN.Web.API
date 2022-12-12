@@ -18,7 +18,7 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Mã sản phẩm
         /// <summary>
-        public string? product_code { get; set; }
+        public string product_code { get; set; }
 
         /// <summary>
         /// Tên sản phẩm
@@ -28,12 +28,12 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Tổng quan về sản phẩm
         /// <summary>
-        public string? summary { get; set; }
+        public string summary { get; set; }
 
         /// <summary>
         /// Mô tả chi tiết về sản phẩm
         /// <summary>
-        public string? description { get; set; }
+        public string description { get; set; }
 
         /// <summary>
         /// Ngày tạo sản phẩm

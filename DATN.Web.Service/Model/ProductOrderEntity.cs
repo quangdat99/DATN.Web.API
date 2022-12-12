@@ -37,19 +37,19 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// 
         /// <summary>
-        public string? product_name { get; set; }
+        public string product_name { get; set; }
         /// <summary>
         /// 
         /// <summary>
-        public string? color_name { get; set; }
+        public string color_name { get; set; }
         /// <summary>
         /// 
         /// <summary>
-        public string? size_name { get; set; }
+        public string size_name { get; set; }
         /// <summary>
         /// 
         /// <summary>
-        public string? url_img { get; set; }
+        public string url_img { get; set; }
         /// <summary>
         /// Số lượng sp
         /// </summary>

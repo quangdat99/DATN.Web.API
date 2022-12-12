@@ -33,7 +33,7 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Nội dung bình luận
         /// <summary>
-        public string? content { get; set; }
+        public string content { get; set; }
         /// <summary>
         /// Ngày tạo đánh giá, bình luận
         /// <summary>
@@ -41,6 +41,6 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Ảnh bình luận, đánh giá
         /// <summary>
-        public string? img_url { get; set; }
+        public string img_url { get; set; }
     }
 }

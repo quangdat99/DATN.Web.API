@@ -9,6 +9,7 @@ public class CreateAddress
     /// <summary>
     public Guid user_id { get; set; }
 
+
     /// <summary>
     /// Tỉnh/ thành phố
     /// <summary>
@@ -23,6 +24,7 @@ public class CreateAddress
     /// xã/ phường
     /// <summary>
     public string commune { get; set; }
+
 
     /// <summary>
     /// Địa chỉ chi tiết

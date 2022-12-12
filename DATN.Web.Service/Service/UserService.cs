@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -109,29 +110,34 @@ namespace DATN.Web.Service.Service
         /// </summary>
         public async Task<UserEntity> ResetPassword(ResetPassword resetPassword)
         {
-            if (resetPassword.confirm_password != resetPassword.new_password)
-            {
-                throw new ValidateException("Confirm Password doesn't match", "");
-            }
+            string field = "user_id";
+            object value = resetPassword.user_id;
 
-            string field;
-            object value;
+            var existedUser = await _userRepo.GetAsync<UserEntity>(field, value);
+            var res = existedUser.FirstOrDefault();
 
-            if (resetPassword.email != null)
+            if (res == null)
             {
-                field = "email";
-                value = resetPassword.email;
+                throw new ValidateException("User doesn't exist", "");
             }
-            else if (resetPassword.phone != null)
+            var verified = BCrypt.Net.BCrypt.Verify(resetPassword.password, res.password);
+            if (!verified)
             {
-                field = "phone";
-                value = resetPassword.phone;
+                throw new ValidateException("Mật khẩu không chính xác, vui lòng kiểm tra lại", resetPassword, int.Parse(ResultCode.WrongPassword));
             }
-            else
-            {
-                field = "user_id";
-                value = resetPassword.user_id;
-            }
+            var encodedData = BCrypt.Net.BCrypt.HashPassword(resetPassword.new_password);
+            res.password = encodedData;
+
+            await _userRepo.UpdateAsync<UserEntity>(res, "password");
+
+            return res;
+        }
+        
+
+        public async Task<UserEntity> UpdateUser(UpdateUser updateUser)
+        {
+            string field = "user_id";
+            object value = updateUser.user_id;
 
             var existedUser = await _userRepo.GetAsync<UserEntity>(field, value);
             var res = existedUser.FirstOrDefault();
@@ -141,10 +147,15 @@ namespace DATN.Web.Service.Service
                 throw new ValidateException("User doesn't exist", "");
             }
 
-            var encodedData = BCrypt.Net.BCrypt.HashPassword(resetPassword.new_password);
-            res.password = encodedData;
+            res.first_name = updateUser.first_name;
+            res.last_name = updateUser.last_name;
+            res.email = updateUser.email;
+            res.phone = updateUser.phone;
+            res.avatar = updateUser.avatar;
+            res.gender = updateUser.gender;
+            res.date_of_birth = updateUser.date_of_birth;
 
-            await _userRepo.UpdateAsync<UserEntity>(res, "password");
+            await _userRepo.UpdateAsync<UserEntity>(res);
 
             return res;
         }

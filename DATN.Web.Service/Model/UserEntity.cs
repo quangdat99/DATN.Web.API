@@ -40,11 +40,11 @@ namespace DATN.Web.Service.Model
         /// Số điện thoại người dùng
         /// <summary>
         public int phone { get; set; }
-        
+
         /// <summary>
         /// Đường dẫn ảnh đại diện
         /// <summary>
-        public string? avatar { get; set; }
+        public string avatar { get; set; }
 
         /// <summary>
         /// Quyển người dùng (Người mua hàng, Quản trị hệ thống)
@@ -60,5 +60,15 @@ namespace DATN.Web.Service.Model
         /// Định danh giỏ hàng
         /// <summary>
         public Guid cart_id { get; set; }
+
+        /// <summary>
+        /// Giới tính
+        /// </summary>
+        public int gender { get; set; }
+
+        /// <summary>
+        /// Ngày sinh
+        /// </summary>
+        public DateTime date_of_birth { get; set; }
     }
 }
