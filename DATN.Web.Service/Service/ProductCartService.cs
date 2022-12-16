@@ -92,8 +92,8 @@ namespace DATN.Web.Service.Service
                     product_amount_old = productCart.sale_price_old ?? 0
                 };
                 productOrder.Add(item);
-                order.product_amount += item.product_amount;
-                order.total_amount += item.product_amount;
+                order.product_amount += item.product_amount * item.quantity;
+                order.total_amount += item.product_amount * item.quantity;
                 _productCartRepo.DeleteAsync(p);
             }
 
