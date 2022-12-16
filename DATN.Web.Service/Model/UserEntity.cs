@@ -64,11 +64,11 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Giới tính
         /// </summary>
-        public int gender { get; set; }
+        public int? gender { get; set; }
 
         /// <summary>
         /// Ngày sinh
         /// </summary>
-        public DateTime date_of_birth { get; set; }
+        public DateTime? date_of_birth { get; set; }
     }
 }

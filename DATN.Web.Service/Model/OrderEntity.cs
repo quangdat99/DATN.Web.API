@@ -20,11 +20,6 @@ namespace DATN.Web.Service.Model
         /// Định danh của người dùng
         /// <summary>
         public Guid user_id { get; set; }
-        
-        /// <summary>
-        /// Định danh mã giảm giá
-        /// <summary>
-        public Guid voucher_user_id{ get; set; }
 
         /// <summary>
         /// Tổng số tiền của đơn hàng
@@ -32,7 +27,9 @@ namespace DATN.Web.Service.Model
         public decimal total_amount { get; set; }
 
         /// <summary>
-        /// Trạng thái của đươn hàng (0: chờ lấy hàng, 1: đang giao, 2: giao thành công, 3: đã hủy đơn, 4: giao hàng thất bại)
+        /// Trạng thái của đươn hàng 
+        /// (5: chờ xác nhận, 2: chờ lấy hàng, 3: đang giao, 
+        /// 1: giao thành công, 4: đã hủy đơn, 6: Giao thất bại/trả hàng)
         /// <summary>
         public OrderStatus status { get; set; }
 
@@ -64,7 +61,7 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Số điện thoại nhận hàng
         /// <summary>
-        public int phone { get; set; }
+        public string phone { get; set; }
 
         /// <summary>
         /// Địa chỉ nhận hàng

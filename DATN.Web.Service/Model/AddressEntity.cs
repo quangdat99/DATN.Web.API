@@ -50,5 +50,17 @@ namespace DATN.Web.Service.Model
         /// Có là địa chỉ mặc định không
         /// <summary>
         public bool is_default { get; set; }
+        /// <summary>
+        /// Tên người nhận
+        /// <summary>
+        public string name { get; set; }
+        /// <summary>
+        /// Số điện thoại
+        /// <summary>
+        public string phone { get; set; }
+        /// <summary>
+        /// ngày tạo
+        /// <summary>
+        public DateTime created_date { get; set; }
     }
 }

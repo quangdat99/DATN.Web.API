@@ -36,5 +36,10 @@ namespace DATN.Web.Service.Model
         /// Ngày tạo
         /// </summary>
         public DateTime created_date { get; set; }
+
+        /// <summary>
+        /// Định danh loại sp
+        /// <summary>
+        public Guid product_id { get; set; }
     }
 }

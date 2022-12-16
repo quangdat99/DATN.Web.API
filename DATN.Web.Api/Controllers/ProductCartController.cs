@@ -96,5 +96,35 @@ namespace DATN.Web.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Đặt hàng
+        /// </summary>
+        [HttpPost("checkout")]
+        public async Task<IActionResult> Checkout(Checkout checkout)
+        {
+            var context = _contextService.Get();
+            checkout.user_id = context.UserId;
+            checkout.cart_id = context.CartId;
+            try
+            {
+                var res = await _ProductCartService.Checkout(checkout);
+                if (res == 1)
+                {
+                    var actionResult = new DAResult(200, Resources.addDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", 0);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, 0);
+                return Ok(actionResult);
+            }
+        }
+
     }
 }

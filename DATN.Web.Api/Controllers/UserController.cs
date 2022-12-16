@@ -43,12 +43,13 @@ namespace DATN.Web.Api.Controllers
         /// <summary>
         /// Lấy Thông tin người dùng
         /// </summary>
-        [HttpGet("info/{id}")]
-        public async Task<IActionResult> GetUserInfo(Guid id)
+        [HttpGet("info")]
+        public async Task<IActionResult> GetUserInfo()
         {
+            var contextData = _contextService.Get();
             try
             {
-                var res = await _userRepo.GetUserInfo(id);
+                var res = await _userRepo.GetUserInfo(contextData.UserId);
                 if (res != null)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
@@ -157,17 +158,15 @@ namespace DATN.Web.Api.Controllers
             {
                 var contextService = _contextService.Get();
                 resetPassword.user_id = contextService.UserId;
-                var res = await _userService.ResetPassword(resetPassword);
-                if (res != null)
-                {
-                    var actionResult = new DAResult(200, "Cập nhật mật khẩu thành công!", "", res);
-                    return Ok(actionResult);
-                }
-                else
-                {
-                    var actionResult = new DAResult(200, "Mật khẩu không chính xác, vui lòng kiểm tra lại!", "", null);
-                    return Ok(actionResult);
-                }
+                await _userService.ResetPassword(resetPassword);
+
+                var actionResult = new DAResult(200, "Cập nhật mật khẩu thành công!", "", 1);
+                return Ok(actionResult);
+            }
+            catch (ValidateException exception)
+            {
+                var actionResult = new DAResult(200, Resources.error, exception.Message, exception.DataErr);
+                return Ok(actionResult);
             }
             catch (Exception exception)
             {

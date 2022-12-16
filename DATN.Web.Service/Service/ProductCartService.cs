@@ -1,7 +1,9 @@
-﻿using DATN.Web.Service.DtoEdit;
+﻿using DATN.Web.Service.Constants;
+using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,7 @@ namespace DATN.Web.Service.Service
             productCart.quantity = addToCart.quantity;
             productCart.product_detail_id = addToCart.product_detail_id;
             productCart.created_date = DateTime.Now;
+            productCart.product_id = addToCart.product_id;
 
             var listPrductCart = await _productCartRepo.GetAsync<ProductCartEntity>("cart_id", addToCart.cart_id);
 
@@ -48,6 +51,59 @@ namespace DATN.Web.Service.Service
             {
                 return await _productCartRepo.InsertAsync<ProductCartEntity>(productCart);
             }
+        }
+
+        public async Task<int> Checkout(Checkout checkout)
+        {
+            var address = await _productCartRepo.GetByIdAsync<AddressEntity>(checkout.address_id);
+            var order = new OrderEntity();
+            order.user_id = checkout.user_id;
+            order.order_id = Guid.NewGuid();
+            order.status = OrderStatus.Acceipt;
+            order.user_name = address.name;
+            order.created_date = DateTime.Now;
+            order.phone = address.phone;
+            order.address = $"{address.address_detail}, {address.commune}, {address.district}, {address.province}";
+            order.product_amount = 0;
+            order.total_amount = 0;
+            order.voucher_amount = 0;
+            order.order_code = DateTime.Now.ToString("yyyyMMddHHmmss");
+
+            var productOrder = new List<ProductOrderEntity>();
+
+            var data = await _productCartRepo.GetProductCart(checkout.cart_id);
+            var productCarts = JsonConvert.DeserializeObject<List<ProductCart>>(JsonConvert.SerializeObject(data));
+
+            foreach (var p in checkout.listProduct)
+            {
+                var productCart = productCarts.Find(x => x.product_detail_id == p.product_detail_id);
+                var item = new ProductOrderEntity()
+                {
+                    product_order_id = Guid.NewGuid(),
+                    order_id = order.order_id,
+                    product_id = p.product_id,
+                    product_detail_id = p.product_detail_id,
+                    product_amount = productCart.sale_price,
+                    product_name = productCart.product_name,
+                    color_name = productCart.color_name,
+                    size_name = productCart.size_name,
+                    url_img = productCart.img_url,
+                    quantity = productCart.quantity,
+                    product_amount_old = productCart.sale_price_old ?? 0
+                };
+                productOrder.Add(item);
+                order.product_amount += item.product_amount;
+                order.total_amount += item.product_amount;
+                _productCartRepo.DeleteAsync(p);
+            }
+
+            foreach (var item in productOrder)
+            {
+               await _productCartRepo.InsertAsync<ProductOrderEntity>(item);
+            }
+            await _productCartRepo.InsertAsync<OrderEntity>(order);
+
+            return 1;
         }
 
         public async Task<List<object>> GetProductCart(Guid cartId)
