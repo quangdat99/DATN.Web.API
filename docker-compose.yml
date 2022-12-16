@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  backend:
+    build: .
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '5000:80'
+    expose:
+      # Opens port 3306 on the container
+      - '80'
