@@ -15,5 +15,7 @@ namespace DATN.Web.Service.Constants
         public const string Email = "Email";
         public const string LastName = "LastName";
         public const string FirstName = "FirstName";
+        public const string TokenExpired = "TokenExpired";
     }
 }
+

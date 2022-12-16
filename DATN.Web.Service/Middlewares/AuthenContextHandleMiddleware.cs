@@ -88,6 +88,7 @@ namespace DATN.Web.Service.Middlewares
                 string authHeader = context.Request.Headers[HeaderKeys.Authorization];
                 if (!string.IsNullOrEmpty(authHeader))
                 {
+                    //string token = authHeader.Split(new char[] { ' ' })[1];
                     string token = authHeader;
                     var handled = new JwtSecurityTokenHandler();
                     var jsonToken = handled.ReadJwtToken(token);
@@ -98,9 +99,15 @@ namespace DATN.Web.Service.Middlewares
                     contextData.Email = payload[TokenKeys.Email].ToString();
                     contextData.FirstName = payload[TokenKeys.FirstName].ToString();
                     contextData.LastName = payload[TokenKeys.LastName].ToString();
+                    contextData.TokenExpired = DateTime.Parse(payload[TokenKeys.TokenExpired].ToString());
+                    
                     contextService.Set(contextData);
                     authenProperties.Add(nameof(ContextData.Email), $"{contextData.Email}");
                     isAuthenticated = true;
+                    if (contextData.TokenExpired < DateTime.Now)
+                    {
+                        isAuthenticated = false;
+                    }
                 }
             }
             return (isAuthenticated, authenProperties);
@@ -116,7 +123,7 @@ namespace DATN.Web.Service.Middlewares
             var lstPath = new List<string> { 
                 "/api/Products/info", 
                 "/api/Users/login", 
-                "/api/Users/signup", 
+                "/api/Users/signup",
                 "/api/Products/homepage",
                 "/api/Categorys",
                 "/api/Products/relation",

@@ -24,5 +24,7 @@ namespace DATN.Web.Service.Interfaces.Service
         /// Lấy danh sách sp trong giỏ hàng
         /// </summary>
         Task<List<object>> GetProductCart(Guid cartId);
+
+        Task<int> Checkout(Checkout checkout);
     }
 }

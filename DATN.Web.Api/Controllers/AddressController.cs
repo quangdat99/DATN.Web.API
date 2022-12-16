@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Interfaces.Repo;
@@ -42,6 +43,36 @@ namespace DATN.Web.Api.Controllers
         /// Create An Address Of User
         /// </summary>
         /// <param name="createAddress">CreareAddress</param>
+        [HttpGet("list")]
+        public async Task<IActionResult> GetAddresses()
+        {
+            try
+            {
+                var contexData = _contextService.Get();
+                var res = await _addressService.GetAddresses(contexData.UserId);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<AddressEntity>());
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
+
+        /// <summary>
+        /// Create An Address Of User
+        /// </summary>
+        /// <param name="createAddress">CreareAddress</param>
         [HttpPost("create")]
         public async Task<IActionResult> CreateAddress([FromBody] CreateAddress createAddress)
         {
@@ -73,14 +104,14 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="updateAddress">UpdateAddress</param>
         /// <param name="address_id">address_id</param>
-        [HttpPut("update/{address_id}")]
-        public async Task<IActionResult> UpdateAddress([FromBody] UpdateAddress updateAddress, Guid address_id)
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateAddress([FromBody] UpdateAddress updateAddress)
         {
             try
             {
                 var contextService = _contextService.Get();
                 updateAddress.user_id = contextService.UserId;
-                var res = await _addressService.UpdateAddress(updateAddress, address_id);
+                var res = await _addressService.UpdateAddress(updateAddress);
                 if (res != null)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
@@ -104,7 +135,7 @@ namespace DATN.Web.Api.Controllers
         /// </summary>
         /// <param name="updateAddress">UpdateAddress</param>
         /// <param name="address_id">address_id</param>
-        [HttpPut("setDefaut/{address_id}")]
+        [HttpPut("setDefault/{address_id}")]
         public async Task<IActionResult> SetDefaultAddressForUser( Guid address_id)
         {
             var context = _contextService.Get();

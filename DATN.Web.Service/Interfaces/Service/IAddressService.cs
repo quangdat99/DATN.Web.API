@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Model;
@@ -18,7 +19,7 @@ namespace DATN.Web.Service.Interfaces.Service
         /// <summary>
         /// Update Address
         /// </summary>
-        Task<AddressEntity> UpdateAddress(UpdateAddress updateAddress, Guid address_id);
+        Task<AddressEntity> UpdateAddress(UpdateAddress updateAddress);
 
         /// <summary>
         /// Delete Address
@@ -31,8 +32,11 @@ namespace DATN.Web.Service.Interfaces.Service
         /// <returns></returns>
         Task<int> SetDefaultAddressForUser(Guid user_id,Guid address_id);
 
-
-
+        /// <summary>
+        /// List Address
+        /// </summary>
+        Task<List<AddressEntity>> GetAddresses(Guid user_id);
 
     }
 }
+

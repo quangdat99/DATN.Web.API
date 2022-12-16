@@ -114,7 +114,6 @@ namespace DATN.Web.Service.Service
                 existedVoucher.VoucherStatus = VoucherStatus.Used;
                 await _orderRepo.UpdateAsync<VoucherUserEntity>(existedVoucher);
 
-                res.voucher_user_id = existedVoucher.voucher_user_id;
                 await _orderRepo.UpdateAsync<OrderEntity>(res);
 
             }

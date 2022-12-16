@@ -20,5 +20,6 @@ namespace DATN.Web.Service.Contexts
         public string LastName { get; set; }
         public string Avatar { get; set; }
         public Guid CartId { get; set; }
+        public DateTime TokenExpired { get; set; }
     }
 }

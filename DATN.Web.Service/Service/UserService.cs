@@ -72,7 +72,8 @@ namespace DATN.Web.Service.Service
                         FirstName = context.FirstName,
                         LastName = context.LastName,
                         Avatar = context.Avatar,
-                        CartId = context.CartId
+                        CartId = context.CartId,
+                        TokenExpired = context.TokenExpired
                     }
                 }
             };
@@ -91,6 +92,8 @@ namespace DATN.Web.Service.Service
             claimIdentity.AddClaim(new Claim(TokenKeys.LastName, context.LastName));
 
             var expire = DateTime.Now.AddSeconds(jwtTokenConfig.ExpiredSeconds);
+            context.TokenExpired = expire;
+            claimIdentity.AddClaim(new Claim(TokenKeys.TokenExpired, context.TokenExpired.ToString()));
             var key = Encoding.ASCII.GetBytes(jwtTokenConfig.SecretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -108,7 +111,7 @@ namespace DATN.Web.Service.Service
         /// <summary>
         /// Reset Password
         /// </summary>
-        public async Task<UserEntity> ResetPassword(ResetPassword resetPassword)
+        public async Task ResetPassword(ResetPassword resetPassword)
         {
             string field = "user_id";
             object value = resetPassword.user_id;
@@ -123,18 +126,16 @@ namespace DATN.Web.Service.Service
             var verified = BCrypt.Net.BCrypt.Verify(resetPassword.password, res.password);
             if (!verified)
             {
-                throw new ValidateException("Mật khẩu không chính xác, vui lòng kiểm tra lại", resetPassword, int.Parse(ResultCode.WrongPassword));
+                throw new ValidateException("Mật khẩu không chính xác, vui lòng kiểm tra lại", 0, int.Parse(ResultCode.WrongPassword));
             }
             var encodedData = BCrypt.Net.BCrypt.HashPassword(resetPassword.new_password);
             res.password = encodedData;
 
             await _userRepo.UpdateAsync<UserEntity>(res, "password");
-
-            return res;
         }
         
 
-        public async Task<UserEntity> UpdateUser(UpdateUser updateUser)
+        public async Task<object> UpdateUser(UpdateUser updateUser)
         {
             string field = "user_id";
             object value = updateUser.user_id;
@@ -157,7 +158,9 @@ namespace DATN.Web.Service.Service
 
             await _userRepo.UpdateAsync<UserEntity>(res);
 
-            return res;
+            var data = await _userRepo.GetUserInfo(updateUser.user_id);
+
+            return data;
         }
 
         public async Task<DAResult> Signup(SignupModel model)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DATN.Web.Service.DtoEdit;
@@ -29,8 +30,14 @@ namespace DATN.Web.Service.Service
             newAddress.province = createAddress.province;
             newAddress.district = createAddress.district;
             newAddress.commune = createAddress.commune;
+            newAddress.province_code = createAddress.province_code;
+            newAddress.district_code = createAddress.district_code;
+            newAddress.commune_code = createAddress.commune_code;
             newAddress.address_detail = createAddress.address_detail;
             newAddress.is_default = createAddress.is_default;
+            newAddress.created_date = DateTime.Now;
+            newAddress.name = createAddress.name;
+            newAddress.phone = createAddress.phone;
 
             await _addressRepo.InsertAsync<AddressEntity>(newAddress);
             if (newAddress.is_default){
@@ -43,26 +50,25 @@ namespace DATN.Web.Service.Service
         /// <summary>
         /// Update Address
         /// </summary>
-        public async Task<AddressEntity> UpdateAddress(UpdateAddress updateAddress, Guid address_id)
+        public async Task<AddressEntity> UpdateAddress(UpdateAddress updateAddress)
         {
-            var existedAddress = await _addressRepo.GetByIdAsync<AddressEntity>(address_id);
+            var existedAddress = await _addressRepo.GetByIdAsync<AddressEntity>(updateAddress.address_id);
 
             if (existedAddress == null)
             {
                 throw new ValidateException("Your address doesn't exist", "");
             }
 
-            existedAddress.user_id = (updateAddress.user_id != null) ? updateAddress.user_id : existedAddress.user_id;
-            existedAddress.province =
-                (updateAddress.province != null) ? updateAddress.province : existedAddress.province;
-            existedAddress.district =
-                (updateAddress.district != null) ? updateAddress.district : existedAddress.district;
-            existedAddress.commune = (updateAddress.commune != null) ? updateAddress.commune : existedAddress.commune;
-            existedAddress.address_detail = (updateAddress.address_detail != null)
-                ? updateAddress.address_detail
-                : existedAddress.address_detail;
-
+            existedAddress.province = updateAddress.province;
+            existedAddress.district = updateAddress.district;
+            existedAddress.commune = updateAddress.commune;
+            existedAddress.province_code = updateAddress.province_code;
+            existedAddress.district_code = updateAddress.district_code;
+            existedAddress.commune_code = updateAddress.commune_code;
+            existedAddress.address_detail = updateAddress.address_detail;
             existedAddress.is_default = updateAddress.is_default;
+            existedAddress.name = updateAddress.name;
+            existedAddress.phone = updateAddress.phone;
 
             await _addressRepo.UpdateAsync<AddressEntity>(existedAddress);
             // Nếu đặt là địa chỉ mặc định thì set lại default đối với user_id
@@ -105,6 +111,13 @@ namespace DATN.Web.Service.Service
             await _addressRepo.DeleteAsync(existedAddress);
 
             return existedAddress;
+        }
+
+        public async Task<List<AddressEntity>> GetAddresses(Guid user_id)
+        {
+            var addresses = await _addressRepo.GetAsync<AddressEntity>("user_id", user_id);
+            addresses = addresses.OrderByDescending(x => x.is_default).ThenByDescending(x => x.created_date).ToList();
+            return addresses;
         }
     }
 }

@@ -33,7 +33,7 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// 
         /// <summary>
-        public decimal? product_amount { get; set; }
+        public decimal product_amount { get; set; }
         /// <summary>
         /// 
         /// <summary>
