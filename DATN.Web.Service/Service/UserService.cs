@@ -199,6 +199,8 @@ namespace DATN.Web.Service.Service
             newAddress.commune_code = model.commune_code;
             newAddress.commune = model.commune;
             newAddress.address_detail = model.address_detail;
+            newAddress.name = $"{model.first_name} {model.last_name}";
+            newAddress.phone = model.phone;
             newAddress.is_default = true;
 
             var address = await _userRepo.InsertAsync<AddressEntity>(newAddress);

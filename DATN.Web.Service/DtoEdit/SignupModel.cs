@@ -31,7 +31,7 @@ namespace DATN.Web.Service.DtoEdit
         /// <summary>
         /// Số điện thoại người dùng
         /// <summary>
-        public int phone { get; set; }
+        public string phone { get; set; }
 
         /// <summary>
         /// Đường dẫn ảnh đại diện
