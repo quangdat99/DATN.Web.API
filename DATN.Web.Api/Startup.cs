@@ -17,6 +17,7 @@ using DATN.Web.Repo.Repo;
 using DATN.Web.Service.Service;
 using DATN.Web.Service.Middlewares;
 using DATN.Web.Service.Contexts;
+using System.IO;
 
 namespace DATN.Web.Api
 {
@@ -38,6 +39,8 @@ namespace DATN.Web.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DATN.Web.Api", Version = "v1" });
             });
+
+            services.AddHttpContextAccessor();
             services.AddScoped(typeof(IBaseRepo), typeof(BaseRepo));
             services.AddScoped(typeof(IBaseService), typeof(BaseService));
 
@@ -85,6 +88,7 @@ namespace DATN.Web.Api
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
+            app.UseStaticFiles();
 
             // Sử dụng authen context
             app.UseSetAuthContextHandler();
@@ -93,6 +97,7 @@ namespace DATN.Web.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
 
 
             app.UseEndpoints(endpoints =>

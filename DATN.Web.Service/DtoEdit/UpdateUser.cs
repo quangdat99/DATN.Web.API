@@ -33,12 +33,12 @@ namespace DATN.Web.Service.DtoEdit
         /// <summary>
         /// Giới tính
         /// </summary>
-        public int gender { get; set; }
+        public int? gender { get; set; }
 
         /// <summary>
         /// Ngày sinh
         /// </summary>
-        public DateTime date_of_birth { get; set; }
+        public DateTime? date_of_birth { get; set; }
 
         /// <summary>
         /// user_id

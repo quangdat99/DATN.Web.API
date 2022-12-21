@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Model;
@@ -32,6 +33,12 @@ namespace DATN.Web.Service.Interfaces.Service
         /// </summary>
         /// <param name="updateUser"></param>
         /// <returns></returns>
-        Task<object> UpdateUser(UpdateUser updateUser);
+        Task<UserInfo> UpdateUser(UpdateUser updateUser);
+
+        /// <summary>
+        /// Lấy token
+        /// </summary>
+        Task<Dictionary<string, object>> GetToken(Guid userId);
+        
     }
 }

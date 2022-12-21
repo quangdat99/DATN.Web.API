@@ -14,6 +14,7 @@ using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
 using DATN.Web.Service.Properties;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -23,10 +24,13 @@ namespace DATN.Web.Service.Service
     public class UserService : BaseService, IUserService
     {
         IUserRepo _userRepo;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IUserRepo userRepo) : base(userRepo)
+        public UserService(IUserRepo userRepo,
+            IHttpContextAccessor httpContextAccessor) : base(userRepo)
         {
             _userRepo = userRepo;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Dictionary<string, object>> Login(LoginModel model)
@@ -71,7 +75,7 @@ namespace DATN.Web.Service.Service
                         Email = context.Email,
                         FirstName = context.FirstName,
                         LastName = context.LastName,
-                        Avatar = context.Avatar,
+                        Avatar = Common.GetUrlImage(_httpContextAccessor.HttpContext.Request.Host.ToString(), context.Avatar),
                         CartId = context.CartId,
                         TokenExpired = context.TokenExpired
                     }
@@ -135,7 +139,7 @@ namespace DATN.Web.Service.Service
         }
         
 
-        public async Task<object> UpdateUser(UpdateUser updateUser)
+        public async Task<UserInfo> UpdateUser(UpdateUser updateUser)
         {
             string field = "user_id";
             object value = updateUser.user_id;
@@ -152,7 +156,7 @@ namespace DATN.Web.Service.Service
             res.last_name = updateUser.last_name;
             res.email = updateUser.email;
             res.phone = updateUser.phone;
-            res.avatar = updateUser.avatar;
+            res.avatar = Common.SaveImage(_httpContextAccessor.HttpContext.Request.Host.Value, updateUser.avatar);
             res.gender = updateUser.gender;
             res.date_of_birth = updateUser.date_of_birth;
 
@@ -167,14 +171,16 @@ namespace DATN.Web.Service.Service
         {
             var newUser = new UserEntity();
             newUser.user_id = Guid.NewGuid();
+            newUser.cart_id = Guid.NewGuid();
             newUser.email = model.email;
             newUser.phone = model.phone;
             newUser.password = BCrypt.Net.BCrypt.HashPassword(model.password);
             newUser.first_name = model.first_name.Trim();
             newUser.last_name = model.last_name.Trim();
-            newUser.avatar = model.avatar;
+            newUser.avatar = Common.SaveImage(_httpContextAccessor.HttpContext.Request.Host.Value, model.avatar);
             newUser.is_block = false;
             newUser.role = Role.Customer;
+            newUser.gender = model.gender;
             // Check tồn tại Email
             var existUserEmail = (await _userRepo.GetAsync<UserEntity>("email", newUser.email))?.FirstOrDefault();
             if (existUserEmail != null)
@@ -222,6 +228,28 @@ namespace DATN.Web.Service.Service
 
             var data = await this.GetContextReturn(context, jwtTokenConfig);
             return new DAResult(200, Resources.signupSuccess, "", data);
+        }
+
+        public async Task<Dictionary<string, object>> GetToken(Guid userId)
+        {
+            var user = await _userRepo.GetByIdAsync<UserEntity>(userId);
+            var context = new ContextData();
+            if (user != null)
+            {
+                context.UserId = user.user_id;
+                context.Email = user.email;
+                context.FirstName = user.first_name;
+                context.LastName = user.last_name;
+                context.Avatar = user.avatar;
+                context.CartId = user.cart_id;
+            }
+
+            var jwtTokenConfig =
+                JsonConvert.DeserializeObject<JwtTokenConfig>(_userRepo.GetConfiguration()
+                    .GetConnectionString("JwtTokenConfig"));
+
+            var data = await this.GetContextReturn(context, jwtTokenConfig);
+            return data;
         }
     }
 }

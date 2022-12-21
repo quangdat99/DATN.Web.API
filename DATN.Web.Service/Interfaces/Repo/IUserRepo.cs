@@ -17,7 +17,7 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// Lấy thông tin người dùng
         /// </summary>
         /// <param name="id">id người dùng</param>
-        Task<object> GetUserInfo(Guid id);
+        Task<UserInfo> GetUserInfo(Guid id);
 
         /// <summary>
         /// Lấy danh sách đại chỉ của một người dùng

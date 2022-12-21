@@ -65,5 +65,9 @@ namespace DATN.Web.Service.DtoEdit
         /// Địa chỉ chi tiết
         /// <summary>
         public string address_detail { get; set; }
+        /// <summary>
+        /// Giới tính
+        /// </summary>
+        public int? gender { get; set; }
     }
 }

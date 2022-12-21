@@ -29,9 +29,9 @@ namespace DATN.Web.Repo.Repo
             _configuration = configuration;
         }
 
-        public async Task<object> GetUserInfo(Guid id)
+        public async Task<UserInfo> GetUserInfo(Guid id)
         {
-            var res = await this.Provider.QueryAsync<object>("Proc_GetUserInfo",
+            var res = await this.Provider.QueryAsync<UserInfo>("Proc_GetUserInfo",
                 new Dictionary<string, object> { { "$UserId", id } }, CommandType.StoredProcedure);
             return res?.FirstOrDefault();
         }

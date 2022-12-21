@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Upload\footer-img2.png\**" />
+    <Content Remove="wwwroot\Upload\footer-img2.png\**" />
+    <EmbeddedResource Remove="wwwroot\Upload\footer-img2.png\**" />
+    <None Remove="wwwroot\Upload\footer-img2.png\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 

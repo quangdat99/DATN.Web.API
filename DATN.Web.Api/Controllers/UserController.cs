@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DATN.Web.Service.Contexts;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Exceptions;
 using DATN.Web.Service.Interfaces.Repo;
@@ -8,6 +9,7 @@ using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
 using DATN.Web.Service.Properties;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace DATN.Web.Api.Controllers
 {
@@ -50,6 +52,7 @@ namespace DATN.Web.Api.Controllers
             try
             {
                 var res = await _userRepo.GetUserInfo(contextData.UserId);
+                res.avatar = Common.GetUrlImage(Request.Host.ToString(), res.avatar);
                 if (res != null)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
@@ -129,6 +132,34 @@ namespace DATN.Web.Api.Controllers
                 return Ok(actionResult);
             }
         }
+        
+        /// <summary>
+        /// Lấy token
+        /// </summary>
+        [HttpGet("token")]
+        public async Task<IActionResult> GetToken()
+        {
+            var contextData = _contextService.Get();
+            try
+            {
+                var res = await _userService.GetToken(contextData.UserId);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<UserEntity>());
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<UserEntity>());
+                return Ok(actionResult);
+            }
+        }
 
         /// <summary>
         /// Đăng nhập
@@ -189,6 +220,7 @@ namespace DATN.Web.Api.Controllers
                 var res = await _userService.UpdateUser(userUpdate);
                 if (res != null)
                 {
+                    res.avatar = Common.GetUrlImage(Request.Host.ToString(), res.avatar);
                     var actionResult = new DAResult(200, "Cập nhật thông tin tài khoản thành công!", "", res);
                     return Ok(actionResult);
                 }
