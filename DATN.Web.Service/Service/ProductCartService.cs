@@ -76,25 +76,61 @@ namespace DATN.Web.Service.Service
 
             foreach (var p in checkout.listProduct)
             {
-                var productCart = productCarts.Find(x => x.product_detail_id == p.product_detail_id);
-                var item = new ProductOrderEntity()
+                var productDetail = await _productCartRepo.GetByIdAsync<ProductDetailEntity>(p.product_detail_id);
+                if (productDetail != null && p.quantity <= productDetail.quantity)
                 {
-                    product_order_id = Guid.NewGuid(),
-                    order_id = order.order_id,
-                    product_id = p.product_id,
-                    product_detail_id = p.product_detail_id,
-                    product_amount = productCart.sale_price,
-                    product_name = productCart.product_name,
-                    color_name = productCart.color_name,
-                    size_name = productCart.size_name,
-                    url_img = productCart.img_url,
-                    quantity = productCart.quantity,
-                    product_amount_old = productCart.sale_price_old ?? 0
-                };
-                productOrder.Add(item);
-                order.product_amount += item.product_amount * item.quantity;
-                order.total_amount += item.product_amount * item.quantity;
-                _productCartRepo.DeleteAsync(p);
+                    var productCart = productCarts.Find(x => x.product_cart_id == p.product_cart_id);
+                    if (productCart != null)
+                    {
+                        var item = new ProductOrderEntity()
+                        {
+                            product_order_id = Guid.NewGuid(),
+                            order_id = order.order_id,
+                            product_id = p.product_id,
+                            product_detail_id = p.product_detail_id,
+                            product_amount = productCart.sale_price,
+                            product_name = productCart.product_name,
+                            color_name = productCart.color_name,
+                            size_name = productCart.size_name,
+                            url_img = productCart.img_url,
+                            quantity = productCart.quantity,
+                            product_amount_old = productCart.sale_price_old ?? 0
+                        };
+                        productOrder.Add(item);
+                        productDetail.quantity = productDetail.quantity - productCart.quantity;
+                        order.product_amount += item.product_amount * item.quantity;
+                        order.total_amount += item.product_amount * item.quantity;
+                        var param = new ProductCartEntity()
+                        {
+                            product_cart_id = productCart.product_cart_id ?? Guid.NewGuid(),
+                        };
+                        await _productCartRepo.DeleteAsync(param);
+                    }
+                    else
+                    {
+                        var item = new ProductOrderEntity()
+                        {
+                            product_order_id = Guid.NewGuid(),
+                            order_id = order.order_id,
+                            product_id = p.product_id,
+                            product_detail_id = p.product_detail_id,
+                            product_amount = p.sale_price,
+                            product_name = p.product_name,
+                            color_name = p.color_name,
+                            size_name = p.size_name,
+                            url_img = p.img_url,
+                            quantity = p.quantity,
+                            product_amount_old = p.sale_price_old ?? 0
+                        };
+                        productOrder.Add(item);
+                        productDetail.quantity = p.quantity - p.quantity;
+                        order.product_amount += item.product_amount * item.quantity;
+                        order.total_amount += item.product_amount * item.quantity;
+                    }
+
+                    await _productCartRepo.UpdateAsync<ProductDetailEntity>(productDetail, "quantity");
+                }
+               
             }
 
             foreach (var item in productOrder)
@@ -106,10 +142,31 @@ namespace DATN.Web.Service.Service
             return 1;
         }
 
+        public async Task<bool> DeleteProductCart(Guid id)
+        {
+            var param = new ProductCartEntity()
+            {
+                product_cart_id = id
+            };
+            var data = await _productCartRepo.DeleteAsync(param);
+            return data;
+        }
+
         public async Task<List<object>> GetProductCart(Guid cartId)
         {
             var productCarts = await _productCartRepo.GetProductCart(cartId);
             return productCarts;
+        }
+
+        public async Task<ProductCartEntity> UpdateQuantity(ProductCartDto mdoel)
+        {
+            var param = new ProductCartEntity()
+            {
+                product_cart_id = mdoel.product_cart_id,
+                quantity = mdoel.quantity
+            };
+            var data = await _productCartRepo.UpdateAsync<ProductCartEntity>(param, "quantity");
+            return data;
         }
     }
 }

@@ -126,5 +126,58 @@ namespace DATN.Web.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Xóa sp trong giỏ hàng
+        /// </summary>
+        [HttpDelete("deleteProduct/{id}")]
+        public async Task<IActionResult> DeleteProductCart(Guid id)
+        {
+            try
+            {
+                var res = await _ProductCartService.DeleteProductCart(id);
+                if (res)
+                {
+                    var actionResult = new DAResult(200, Resources.addDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", false);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, false);
+                return Ok(actionResult);
+            }
+        }
+        /// <summary>
+        /// thay đổi số lượng sp trong giỏ hàng
+        /// </summary>
+        [HttpPut("updateQuantity")]
+        public async Task<IActionResult> UpdateQuantity(ProductCartDto model)
+        {
+            try
+            {
+                var res = await _ProductCartService.UpdateQuantity(model);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.addDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
     }
 }

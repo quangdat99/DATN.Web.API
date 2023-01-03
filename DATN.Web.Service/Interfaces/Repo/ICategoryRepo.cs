@@ -1,4 +1,5 @@
-﻿using DATN.Web.Service.Model;
+﻿using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,10 @@ namespace DATN.Web.Service.Interfaces.Repo
     /// </summary>
     public interface ICategoryRepo : IBaseRepo
     {
+        /// <summary>
+        /// Lấy ds loại sp
+        /// </summary>
+        /// <returns></returns>
+        Task<List<CategoryDto>> GetCategory();
     }
 }

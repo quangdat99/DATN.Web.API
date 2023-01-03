@@ -82,13 +82,13 @@ namespace DATN.Web.Api.Controllers
                 }
                 else
                 {
-                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<UserEntity>());
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
                     return Ok(actionResult);
                 }
             }
             catch (Exception exception)
             {
-                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<UserEntity>());
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
                 return Ok(actionResult);
             }
         }

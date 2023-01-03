@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using DATN.Web.Service.Constants;
@@ -113,6 +114,17 @@ namespace DATN.Web.Repo.Repo
 
             var result = await Provider.QueryAsync<VoucherUserEntity>(sql, param);
             return result?.FirstOrDefault();
+        }
+
+        public async Task<OrderStatusCount> OrderStatusCount(Guid userIdd)
+        {
+            var param = new Dictionary<string, object>()
+            {
+                { "$user_id", userIdd },
+            };
+            var res = await this.Provider.QueryAsync<OrderStatusCount>("Proc_GetOrderCount",
+                param, CommandType.StoredProcedure);
+            return res?.FirstOrDefault();
         }
     }
 }

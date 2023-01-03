@@ -21,12 +21,18 @@ namespace DATN.Web.Service.Interfaces.Service
         /// Hủy đơn hàng trong trạng thái chờ lấy hàng
         /// </summary>
         /// <param name="cancelOrder"></param>
-        Task<OrderEntity> CancelOrder(CancelOrder cancelOrder);
+        Task<OrderEntity> CancelOrder(Guid id);
 
         /// <summary>
         /// Order Payment
         /// </summary>
         /// <param name="orderPayment"></param>
         Task<OrderEntity> OrderPayment(OrderPayment orderPayment, Guid user_id, Guid cart_id);
+
+        /// <summary>
+        /// Lấy số lượng trạng thái của đơn hàng
+        /// </summary>
+        /// <param name="userId"></param>
+        Task<OrderStatusCount> OrderStatusCount(Guid userId);
     }
 }

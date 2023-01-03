@@ -13,6 +13,6 @@ namespace DATN.Web.Service.DtoEdit
         public Guid user_id { get; set; }
         public Guid cart_id { get; set; }
         public int method_payment { get; set; }
-        public List<ProductCartEntity> listProduct { get; set; } = new List<ProductCartEntity>();
+        public List<ProductCart> listProduct { get; set; } = new List<ProductCart>();
     }
 }

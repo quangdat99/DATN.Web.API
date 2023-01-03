@@ -24,7 +24,23 @@ namespace DATN.Web.Service.Interfaces.Service
         /// Lấy danh sách sp trong giỏ hàng
         /// </summary>
         Task<List<object>> GetProductCart(Guid cartId);
-
+        /// <summary>
+        /// Mua hàng
+        /// </summary>
+        /// <param name="checkout"></param>
+        /// <returns></returns>
         Task<int> Checkout(Checkout checkout);
+        /// <summary>
+        /// Xóa sp trong giỏ hàng
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<bool> DeleteProductCart(Guid id);
+        /// <summary>
+        /// Thay đổi số lượng
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductCartEntity> UpdateQuantity(ProductCartDto mdoel);
     }
 }

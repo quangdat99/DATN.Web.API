@@ -31,5 +31,10 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// <param name="user_id">CartId </param>
         /// <param name="voucher_id">CartId </param>
         Task<VoucherUserEntity> GetVoucherUser(Guid voucher_id, Guid user_id);
+
+        /// <summary>
+        /// Lấy số lượng trạng thái đơn hàng
+        /// </summary>
+        Task<OrderStatusCount> OrderStatusCount(Guid userIdd);
     }
 }

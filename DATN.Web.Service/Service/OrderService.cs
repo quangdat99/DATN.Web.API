@@ -38,29 +38,15 @@ namespace DATN.Web.Service.Service
         /// Hủy đơn hàng trong trạng thái chờ lấy hàng
         /// </summary>
         /// <param name="cancelOrder"></param>
-        public async Task<OrderEntity> CancelOrder(CancelOrder cancelOrder)
+        public async Task<OrderEntity> CancelOrder(Guid id)
         {
-            var existedOrder = await _orderRepo.GetAsync<OrderEntity>("order_id", cancelOrder.order_id);
-            var res = existedOrder.FirstOrDefault();
+            var res = await _orderRepo.GetByIdAsync<OrderEntity>(id);
 
-            if (res == null)
-            {
-                throw new ValidateException("Order not available", "");
-            }
 
-            if (res.user_id != cancelOrder.user_id)
-            {
-                throw new ValidateException("Unauthorized", "");
-            }
-
-            if (res.status == OrderStatus.Pending)
+            if (res.status == OrderStatus.Acceipt || res.status == OrderStatus.Pending)
             {
                 res.status = OrderStatus.Cancelled;
-                await _orderRepo.UpdateAsync<OrderEntity>(existedOrder, "status");
-            }
-            else
-            {
-                throw new ValidateException("Not in Pending status", "");
+                await _orderRepo.UpdateAsync<OrderEntity>(res, "status");
             }
 
             return res;
@@ -119,6 +105,12 @@ namespace DATN.Web.Service.Service
             }
 
             return res;
+        }
+
+        public async Task<OrderStatusCount> OrderStatusCount(Guid userId)
+        {
+            var data = await _orderRepo.OrderStatusCount(userId);
+            return data;
         }
     }
 }

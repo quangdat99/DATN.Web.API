@@ -125,7 +125,7 @@ namespace DATN.Web.Service.Middlewares
                 "/api/Users/login", 
                 "/api/Users/signup",
                 "/api/Products/homepage",
-                "/api/Categorys",
+                "/api/Categorys/getCategory",
                 "/api/Products/relation",
                 "/api/Products/rateOption",
                 "/api/Products/commentProduct",

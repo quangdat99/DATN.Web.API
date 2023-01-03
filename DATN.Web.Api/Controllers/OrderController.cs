@@ -73,15 +73,15 @@ namespace DATN.Web.Api.Controllers
         }
 
         /// <summary>
-        /// Hủy đơn hàng trong trạng thái chờ lấy hàng
+        /// Hủy đơn hàng trong trạng thái Chờ xác nhận và Chờ lấy hàng
         /// </summary>hàng
         /// <param name="cancelOrder">userId và trạng thái đơn </param>
-        [HttpPost("cancelOrder")]
-        public async Task<IActionResult> CancelOrder([FromBody] CancelOrder cancelOrder)
+        [HttpPost("cancelOrder/{id}")]
+        public async Task<IActionResult> CancelOrder(Guid id)
         {
             try
             {
-                var res = await _orderService.CancelOrder(cancelOrder);
+                var res = await _orderService.CancelOrder(id);
                 if (res != null)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
@@ -129,5 +129,35 @@ namespace DATN.Web.Api.Controllers
                 return Ok(actionResult);
             }
         }
+
+        /// <summary>
+        /// Lấy danh sách đơn hàng theo trạng thái của một người dùng
+        /// </summary>hàng
+        /// <param name="listOrder">userId và trạng thái đơn </param>
+        [HttpGet("orderStatusCount")]
+        public async Task<IActionResult> OrderStatusCount()
+        {
+            var context = _contextService.Get();
+            try
+            {
+                var res = await _orderService.OrderStatusCount(context.UserId);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
     }
 }

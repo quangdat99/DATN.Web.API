@@ -11,6 +11,7 @@ namespace DATN.Web.Service.DtoEdit
     {
 
         public Guid product_detail_id { get; set; }
+        public Guid? product_cart_id { get; set; }
         /// <summary>
         /// Kích cỡ của sản phẩm
         /// <summary>

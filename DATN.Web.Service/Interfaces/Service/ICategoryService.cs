@@ -1,4 +1,5 @@
-﻿using DATN.Web.Service.Model;
+﻿using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,10 @@ namespace DATN.Web.Service.Interfaces.Service
     /// </summary>
     public interface ICategoryService : IBaseService
     {
+
+        /// <summary>
+        /// Lấy danh sách loại sp
+        /// </summary>
+        Task<List<CategoryDto>> GetCategory();
     }
 }
