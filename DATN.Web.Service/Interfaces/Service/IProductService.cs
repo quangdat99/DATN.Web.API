@@ -42,5 +42,9 @@ namespace DATN.Web.Service.Interfaces.Service
         /// Lấy danh sách sản phẩm trang home page có tìm kiếm, sắp xếp,...
         /// </summary>
         Task<List<ProductClient>> GetProductHome(SearchModel model);
+        /// <summary>
+        /// Lưu sản phẩm
+        /// </summary>
+        Task<object> SaveProduct(SaveProduct saveProduct);
     }
 }

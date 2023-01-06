@@ -290,5 +290,32 @@ namespace DATN.Web.Api.Controllers
                 return Ok(actionResult);
             }
         }
+
+        /// <summary>
+        /// Lấy danh sách bình luận của sản phẩm
+        /// </summary>
+        [HttpPost("saveProduct")]
+        public async Task<IActionResult> SaveProduct(SaveProduct saveProduct)
+        {
+            try
+            {
+                var res = await _productService.SaveProduct(saveProduct);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<object>());
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<object>());
+                return Ok(actionResult);
+            }
+        }
     }
 }

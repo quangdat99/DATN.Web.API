@@ -137,5 +137,46 @@ namespace DATN.Web.Service.Service
             var products = await _productRepo.GetProductHome(model);
             return products;
         }
+
+        public async Task<object> SaveProduct(SaveProduct saveProduct)
+        {
+            var product = new ProductEntity();
+            product.product_id = Guid.NewGuid();
+            product.product_code = saveProduct.product_code;
+            product.product_name = saveProduct.product_name;
+            product.summary = saveProduct.summary;
+            product.description = saveProduct.description;
+            product.created_date = DateTime.Now;
+            product.status = 1; // Đang bán
+
+            await _productRepo.InsertAsync<ProductEntity>(product);
+
+            var productDetails = new List<ProductDetailEntity>();
+
+            foreach (var item in saveProduct.ProductDetails)
+            {
+                productDetails.Add(new ProductDetailEntity
+                {
+                    product_detail_id = Guid.NewGuid(),
+                    product_id = product.product_id,
+                    img_url = item.img_url,
+                    sale_price = item.sale_price,
+                    sale_price_old = item.sale_price_old,
+                    purchase_price = item.purchase_price,
+                    size_name = item.size_name,
+                    color_name = item.color_name,
+                    quantity = item.quantity,
+                    created_date = DateTime.Now,
+                    product_discount = item.product_discount
+                });
+            }
+
+            foreach (var item in productDetails)
+            {
+                await _productRepo.InsertAsync<ProductDetailEntity>(item);
+            }
+            var data = await _productRepo.GetProductInfo(product.product_id);
+            return data;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DATN.Web.Service.Constants;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,5 +22,6 @@ namespace DATN.Web.Service.Contexts
         public string Avatar { get; set; }
         public Guid CartId { get; set; }
         public DateTime TokenExpired { get; set; }
+        public Role Role { get; set; }
     }
 }

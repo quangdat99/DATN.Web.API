@@ -158,6 +158,5 @@ namespace DATN.Web.Api.Controllers
                 return Ok(actionResult);
             }
         }
-
     }
 }

@@ -45,6 +45,7 @@ namespace DATN.Web.Service.Service
                 context.LastName = user.last_name;
                 context.Avatar = user.avatar;
                 context.CartId = user.cart_id;
+                context.Role = user.role;
             }
 
             var jwtTokenConfig =
@@ -77,7 +78,8 @@ namespace DATN.Web.Service.Service
                         LastName = context.LastName,
                         Avatar = Common.GetUrlImage(_httpContextAccessor.HttpContext.Request.Host.ToString(), context.Avatar),
                         CartId = context.CartId,
-                        TokenExpired = context.TokenExpired
+                        TokenExpired = context.TokenExpired,
+                        Role = context.Role
                     }
                 }
             };
@@ -220,6 +222,7 @@ namespace DATN.Web.Service.Service
                 context.LastName = user.last_name;
                 context.Avatar = user.avatar;
                 context.CartId = user.cart_id;
+                context.Role = user.role;
             }
 
             var jwtTokenConfig =
@@ -242,6 +245,7 @@ namespace DATN.Web.Service.Service
                 context.LastName = user.last_name;
                 context.Avatar = user.avatar;
                 context.CartId = user.cart_id;
+                context.Role = user.role;
             }
 
             var jwtTokenConfig =

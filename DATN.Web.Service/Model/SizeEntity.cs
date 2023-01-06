@@ -17,7 +17,7 @@ namespace DATN.Web.Service.Model
         /// Định danh kích cỡ
         /// <summary>
         [Key]
-        public string size_id { get; set; }
+        public Guid size_id { get; set; }
         /// <summary>
         /// Tên kích cỡ
         /// <summary>

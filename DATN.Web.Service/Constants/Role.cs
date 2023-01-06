@@ -8,7 +8,7 @@ namespace DATN.Web.Service.Constants
         /// <summary>
         /// Admin
         /// </summary>
-        Admin = 0,
+        Admin = 2,
 
         /// <summary>
         /// Customer
