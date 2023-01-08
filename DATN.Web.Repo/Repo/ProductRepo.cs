@@ -38,7 +38,7 @@ namespace DATN.Web.Repo.Repo
             if (result != null)
             {
                 result.ProductDetails = await this.GetAsync<ProductDetailEntity>("product_id", result.product_id);
-                result.Attributes = await this.GetAsync<AttributeEntity>("product_id", result.product_id);
+                result.Attributes = await this.Provider.QueryAsync<AttributeClient>("Proc_GetProductAttribute", param, CommandType.StoredProcedure);
             }
 
             return result;

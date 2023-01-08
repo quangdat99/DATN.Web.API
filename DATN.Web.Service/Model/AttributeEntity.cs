@@ -8,31 +8,27 @@ using System.Threading.Tasks;
 namespace DATN.Web.Service.Model
 {
     /// <summary>
-    /// Bảng thông tin các thuộc tính của sản phẩm
+    /// Thông tin nhóm thuộc tính của sản phẩm
     /// <summary>
     [Table("attribute")]
     public class AttributeEntity
     {
         /// <summary>
-        /// Đanh danh bảng thông tin thuộc tính sản phẩm
+        /// PK
         /// <summary>
         [Key]
         public Guid attribute_id { get; set; }
         /// <summary>
-        /// Định danh của sản phẩm
+        /// 
         /// <summary>
-        public Guid product_id { get; set; }
+        public string? attribute_name { get; set; }
         /// <summary>
-        /// Tiêu đề thuộc tính
+        /// 
         /// <summary>
-        public string attribute_title { get; set; }
+        public string? status { get; set; }
         /// <summary>
-        /// Giá trị thuộc tính
+        /// 
         /// <summary>
-        public string attribute_value { get; set; }
-        /// <summary>
-        /// Số thứ tự
-        /// <summary>
-        public int sort_order { get; set; }
+        public string? created_date { get; set; }
     }
 }
