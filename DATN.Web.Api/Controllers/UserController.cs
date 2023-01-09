@@ -128,7 +128,9 @@ namespace DATN.Web.Api.Controllers
             }
             catch (Exception exception)
             {
-                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                //var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                var actionResult = new DAResult(500, exception.StackTrace, exception.Message, null);
+                Console.WriteLine(exception.StackTrace);
                 return Ok(actionResult);
             }
         }
