@@ -62,6 +62,10 @@ namespace DATN.Web.Api
             services.AddScoped<IColorService, ColorService>();
             services.AddScoped<IColorRepo, ColorRepo>();
 
+
+            services.AddScoped<IAttributeService, AttributeService>();
+            services.AddScoped<IAttributeRepo, AttributeRepo>();
+
             services.AddScoped<ISizeService, SizeService>();
             services.AddScoped<ISizeRepo, SizeRepo>();
 

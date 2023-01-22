@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
@@ -65,6 +66,15 @@ namespace DATN.Web.Repo.Mysql
         {
             var dynamicParams = this.GetParameters(param);
             var result = await cnn.QueryAsync<T>(commandText, dynamicParams, commandType: commandType);
+            return result.AsList();
+        }
+
+
+        public async Task<IList> QueryAsync(IDbConnection cnn, string commandText,
+            Dictionary<string, object> param, CommandType commandType = CommandType.Text)
+        {
+            var dynamicParams = this.GetParameters(param);
+            var result = await cnn.QueryAsync(commandText, dynamicParams, commandType: commandType);
             return result.AsList();
         }
 

@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Model;
+using DATN.Web.Service.Properties;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -115,6 +119,81 @@ namespace DATN.Web.Repo.Repo
             var res = await this.Provider.QueryAsync<object>("Proc_GetCommentProduct",
                 param, CommandType.StoredProcedure);
             return res;
+        }
+        public override async Task<DAResult> GetDataTable<T>(FilterTable filterTable)
+        {
+            var table = this.GetTableName(typeof(ProductEntity));
+            var columnSql = this.ParseColumn(string.Join(",", filterTable.fields));
+
+            var param = new Dictionary<string, object>();
+            var where = this.ParseWhere(string.Join(",", filterTable.filter ?? new List<string>()), param);
+
+            IDbConnection cnn = null;
+            IList result = null;
+            int totalRecord = 0;
+            try
+            {
+                cnn = this.Provider.GetOpenConnection();
+
+                var sb = new StringBuilder($"SELECT p.product_id, p.product_code, p.product_name, " +
+                    $"SUM(pd.quantity) AS quantity_int, " +
+                    $"MIN(pd.sale_price) AS sale_price_int, " +
+                    $"FORMAT(SUM(pd.quantity),0) AS quantity, " +
+                    $"IF(p.status = 1, 'Đang bán', 'Ngừng bán') AS status, " +
+                    $"CONCAT(IF (MIN(pd.sale_price) = 0 OR MIN(pd.sale_price) = MAX(pd.sale_price), '', CONCAT(FORMAT(MIN(pd.sale_price), 0), 'đ - ')) , FORMAT(MAX(pd.sale_price), 0), 'đ') AS sale_price " +
+                    $"FROM product p LEFT JOIN product_detail pd ON p.product_id = pd.product_id ");
+                var sqlSummary = new StringBuilder($"SELECT COUNT(*) FROM {table}");
+
+                if (!string.IsNullOrWhiteSpace(where))
+                {
+                    sb.Append($" WHERE {where}");
+                    sqlSummary.Append($" WHERE {where}");
+                }
+
+                sb.Append($" GROUP BY p.product_id, p.product_code, p.product_name");
+
+                // Sắp xếp
+                if (filterTable.sortBy?.Count > 0 && filterTable.sortType?.Count > 0)
+                {
+                    sb.Append($" ORDER BY ");
+                    for (int i = 0; i < filterTable.sortBy.Count; i++)
+                    {
+                        if (filterTable.sortBy[i] == "quantity")
+                        {
+                            sb.Append($" quantity_int {filterTable.sortType[i]}");
+                        }
+                        else if (filterTable.sortBy[i] == "sale_price") 
+                        {
+                            sb.Append($" sale_price_int {filterTable.sortType[i]}");
+                        } else
+                        {
+                            sb.Append($" {filterTable.sortBy[i]} {filterTable.sortType[i]}");
+                        }
+                        if (i != filterTable.sortBy.Count - 1)
+                        {
+                            sb.Append(",");
+                        }
+                    }
+                } else
+                {
+                    sb.Append($" ORDER BY p.created_date DESC");
+                }
+
+                if (filterTable.page > 0 && filterTable.size > 0)
+                {
+                    sb.Append($" LIMIT {filterTable.size} OFFSET {(filterTable.page - 1) * filterTable.size}");
+                }
+
+
+                result = await this.Provider.QueryAsync(cnn, sb.ToString(), param);
+                totalRecord = await cnn.ExecuteScalarAsync<int>(sqlSummary.ToString(), param);
+            }
+            finally
+            {
+                this.Provider.CloseConnection(cnn);
+            }
+
+            return new DAResult(200, Resources.getDataSuccess, "", result, totalRecord);
         }
     }
 }

@@ -10,5 +10,6 @@ namespace DATN.Web.Service.DtoEdit
     public class SaveProduct : ProductEntity
     {
         public List<ProductDetailEntity> ProductDetails { get; set; }
+        public List<AttributeClient> Attributes { get; set; }
     }
 }

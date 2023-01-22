@@ -175,6 +175,20 @@ namespace DATN.Web.Service.Service
             {
                 await _productRepo.InsertAsync<ProductDetailEntity>(item);
             }
+
+            foreach (var item in saveProduct.Attributes)
+            {
+                if (item.state == "insert")
+                {
+                    await _productRepo.InsertAsync<ProductAttributeEntity>(item);
+                } else if (item.state == "update")
+                {
+                    await _productRepo.UpdateAsync<ProductAttributeEntity>(item, nameof(ProductAttributeEntity.value));
+                } else if (item.state == "delete")
+                {
+                    await _productRepo.DeleteAsync(item is ProductAttributeEntity productAttributeEntity);
+                }
+            }
             var data = await _productRepo.GetProductInfo(product.product_id);
             return data;
         }

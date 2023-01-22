@@ -1,6 +1,9 @@
-﻿using DATN.Web.Service.Interfaces.Repo;
+﻿using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
+using DATN.Web.Service.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,6 +49,16 @@ namespace DATN.Web.Service.Service
         {
             var res = await _baseRepo.UpdateAsync<T>(entity);
             return res;
+        }
+
+        public async Task<IList> GetComboboxPaging<T>(string columns, string filter, string sort)
+        {
+            return await _baseRepo.GetComboboxPaging(typeof(T), columns, filter, sort);
+        }
+
+        public async Task<DAResult> GetDataTable<T>(FilterTable filterTable)
+        {
+            return await _baseRepo.GetDataTable<T>(filterTable);
         }
     }
 }

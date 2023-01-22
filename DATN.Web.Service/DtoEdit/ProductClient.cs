@@ -38,6 +38,8 @@ namespace DATN.Web.Service.DtoEdit
         public string sizes { get; set; }
         public int count_comment { get; set; }
         public int total_quantity { get; set; }
+        public string sale_price { get; set; }
+        public string quantity { get; set; }
     }
 }
 

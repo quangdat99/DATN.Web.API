@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using DATN.Web.Service.Exceptions;
 using DATN.Web.Service.Contexts;
 using Microsoft.Extensions.DependencyInjection;
+using DATN.Web.Service.DtoEdit;
 
 namespace DATN.Web.Api.Controllers
 {
@@ -204,6 +205,41 @@ namespace DATN.Web.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Lấy dữ liệu combobox
+        /// </summary>
+        [HttpPost("combobox")]
+        public async Task<IActionResult> GetComboboxPaging([FromBody] PagingParameter param)
+        {
+            try
+            {
+                var result = await _baseService.GetComboboxPaging<T>(param.Columns, param.Filter, param.Sort);
+                return Ok(new DAResult(200, Resources.getDataSuccess, "", result));
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Lấy dữ liệu bảng
+        /// </summary>
+        [HttpPost("dataTable")]
+        public async Task<IActionResult> GetDataTable([FromBody] FilterTable param)
+        {
+            try
+            {
+                var result = await _baseService.GetDataTable<T>(param);
+                return Ok(result);
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
         #endregion
     }
 }

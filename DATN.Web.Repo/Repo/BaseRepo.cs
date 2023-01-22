@@ -1,14 +1,22 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 using DATN.Web.Repo.Mysql;
 using DATN.Web.Service.Attributes;
+using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Interfaces.Repo;
+using DATN.Web.Service.Model;
+using DATN.Web.Service.Properties;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DATN.Web.Repo.Repo
 {
@@ -335,6 +343,361 @@ namespace DATN.Web.Repo.Repo
             return query;
         }
 
+        public async Task<IList> GetComboboxPaging(Type type, string colums, string filter, string sort)
+        {
+            var columnSql = this.ParseColumn(colums);
+            var sortSql = this.ParseSort(sort);
+            var param = new Dictionary<string, object>();
+            var where = this.ParseWhere(filter, param);
+            var table = this.GetTableName(type);
+
+            IDbConnection cnn = null;
+            IList result = null;
+            try
+            {
+                cnn = this.Provider.GetOpenConnection();
+
+                var sb = new StringBuilder($"SELECT {columnSql} FROM {table}");
+                if (!string.IsNullOrWhiteSpace(where))
+                {
+                    sb.Append($" WHERE {where}");
+                }
+
+                if (!string.IsNullOrEmpty(sortSql))
+                {
+                    sb.Append($" ORDER BY {sortSql}");
+                }
+
+                result = await this.Provider.QueryAsync(cnn, sb.ToString(), param);
+            }
+            finally
+            {
+                this.Provider.CloseConnection(cnn);
+            }
+
+            return result;
+            
+        }
+
+        protected virtual string ParseColumn(string columns, string alias = "")
+        {
+            if (string.IsNullOrWhiteSpace(columns))
+            {
+                throw new Exception("Invalid columns");
+            }
+
+            var res = new List<string>();
+            var sb = new StringBuilder();
+            foreach (var item in columns.Split(","))
+            {
+                if (sb.Length > 0)
+                {
+                    sb.Append(",");
+                }
+                res.Add(SafeColumn(item, alias));
+            }
+            return String.Join(",", res);
+        }
+
+        protected virtual string SafeColumn(string column, string alias = "")
+        {
+            var sb = new StringBuilder();
+            if (!string.IsNullOrEmpty(alias))
+            {
+                sb.Append($"{alias}.`");
+            }
+            else
+            {
+                sb.Append("`");
+            }
+            Char ch;
+            for (int i = 0; i < column.Length; i++)
+            {
+                ch = column[i];
+                switch (ch)
+                {
+                    case ' ':
+                    case '`':
+                    case '\\':
+                        continue;
+                }
+                sb.Append(ch);
+            }
+            sb.Append("`");
+            return sb.ToString();
+        }
+
+        protected virtual string ParseSort(string sorts)
+        {
+            if (string.IsNullOrWhiteSpace(sorts))
+            {
+                return "";
+            }
+
+            var sb = new StringBuilder();
+            foreach (var sort in sorts.Split("`"))
+            {
+                if (string.IsNullOrWhiteSpace(sort))
+                {
+                    continue;
+                }
+
+                var item = sort.Trim();
+                if (sb.Length > 0)
+                {
+                    sb.Append(",");
+                }
+
+                var ix = item.LastIndexOf(" ");
+                string field;
+                var dir = "ASC";
+                if (ix > 0)
+                {
+                    field = item.Substring(0, ix);
+                    var temp = item.Substring(ix + 1);
+                    if ("DESC".Equals(temp, StringComparison.OrdinalIgnoreCase))
+                    {
+                        dir = "DESC";
+                    }
+                }
+                else
+                {
+                    field = item;
+                }
+
+                field = field.Trim();
+                if (string.IsNullOrEmpty(field))
+                {
+                    continue;
+                }
+
+                sb.Append($"`{field}` {dir}");
+            }
+
+            return sb.ToString();
+        }
+
+        protected virtual string ParseWhere(string filter, Dictionary<string, object> param, string alias = "")
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                return "";
+            }
+
+            var items = JsonConvert.DeserializeObject<List<FilterItem>>(filter);
+            var sb = new StringBuilder();
+            foreach (var item in items)
+            {
+                var sql = this.ParseFilter(item, param, string.IsNullOrEmpty(item.Alias) ? alias : item.Alias);
+                if (string.IsNullOrEmpty(sql))
+                {
+                    continue;
+                }
+                if (sb.Length > 0)
+                {
+                    sb.Append(" AND ");
+                }
+                sb.Append(sql);
+            }
+            return sb.ToString();
+        }
+
+        protected string ParseFilter(FilterItem filter, Dictionary<string, object> param, string alias = "")
+        {
+            var sb = new StringBuilder();
+            var hasOr = filter.Ors != null && filter.Ors.Count > 0;
+            var op = string.IsNullOrEmpty(filter.Operator) ? "=" : filter.Operator.ToUpper();
+
+            if (hasOr || op.Equals("NULL"))
+            {
+                sb.Append("(");
+            }
+
+            sb.Append(SafeColumn(filter.Field, alias));
+
+            var pname = $"{filter.Field}{param.Count}";
+            switch (op)
+            {
+                case "=":
+                case ">":
+                case ">=":
+                case "<":
+                case "<=":
+                case "!=":
+                    sb.Append($" {op} @{pname}");
+                    param[pname] = this.GetFilterValue(filter.Field, filter.Value);
+                    break;
+                case "*": // Chứa
+                    sb.Append($" LIKE @{pname}");
+                    param[pname] = $"%{this.GetFilterValue(filter.Field, filter.Value)}%";
+                    break;
+                case "!*": // Chứa
+                    sb.Append($"NOT LIKE @{pname}");
+                    param[pname] = $"%{this.GetFilterValue(filter.Field, filter.Value)}%";
+                    break;
+                case "*.": // Bắt đầu bằng
+                    sb.Append($" LIKE @{pname}");
+                    param[pname] = $"{this.GetFilterValue(filter.Field, filter.Value)}%";
+                    break;
+                case ".*": // Kết thúc bằng
+                    sb.Append($" LIKE @{pname}");
+                    param[pname] = $"%{this.GetFilterValue(filter.Field, filter.Value)}";
+                    break;
+                case "NULL": // Kết thúc bằng
+                    if (filter.Value != null)
+                    {
+                        if (filter.Value.ToString() == "1000-01-01")
+                        {
+                            sb.Append(" IS NULL ");
+                        }
+                        else
+                        {
+                            sb.Append($" IS NULL OR {SafeColumn(filter.Field, alias)} = ''");
+                        }
+                    } else
+                    {
+                        sb.Append($" IS NULL OR {SafeColumn(filter.Field, alias)} = ''");
+                    }
+                    break;
+                case "NOT NULL": // Kết thúc bằng
+                    if (filter.Value != null)
+                    {
+                        if (filter.Value.ToString() == "1000-01-01")
+                        {
+                            sb.Append(" IS NOT NULL ");
+                        }
+                        else
+                        {
+                            sb.Append($" IS NOT NULL AND {SafeColumn(filter.Field, alias)} <> ''");
+                        }
+                    }
+                    else
+                    {
+                        sb.Append($" IS NOT NULL AND {SafeColumn(filter.Field, alias)} <> ''");
+                    }
+                    break;
+                case "IN":
+                case "NOT IN":
+                    if (filter.Value is IList)
+                    {
+                        sb.Append($" {op} (");
+                        var values = (IList)filter.Value;
+                        for (int i = 0; i < values.Count; i++)
+                        {
+                            if (i>0)
+                            {
+                                sb.Append(",");
+                            }
+
+                            object item = values[i];
+                            if (item is JValue)
+                            {
+                                item = ((JValue)item).Value;
+                            }
+                            pname = $"{filter.Field}{param.Count}_{i}";
+                            sb.Append($"{pname}");
+
+                            var value = this.GetFilterValue(filter.Field, item);
+                            param[pname] = this.GetFilterValue(filter.Field, value);
+                        }
+                        sb.Append(")");
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                    break;
+                default:
+                    return null;
+            }
+
+            if (hasOr || op.Equals("NULL"))
+            {
+                if (hasOr)
+                {
+                    foreach (var item in filter.Ors)
+                    {
+                        var temp = this.ParseFilter(item, param, string.IsNullOrEmpty(item.Alias) ? alias : item.Alias);
+                        sb.Append($" OR {temp}");
+                    }
+                }
+
+                sb.Append(')');
+            }
+            return sb.ToString();
+        }
+
+        protected object GetFilterValue(string field, object value)
+        {
+            if (value is string)
+            {
+                DateTime tempDate;
+                if (field.Contains("Time") && DateTime.TryParseExact(value as string, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate))
+                {
+                    return tempDate;
+                } 
+                else if(field.Contains("Date") && DateTime.TryParseExact(value as string, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate))
+                {
+                    return tempDate;
+                }
+            }
+            return value;
+        }
+
+        public virtual async Task<DAResult> GetDataTable<T>(FilterTable filterTable)
+        {
+            var table = this.GetTableName(typeof(T));
+            var columnSql = this.ParseColumn(string.Join(",", filterTable.fields));
+
+            var param = new Dictionary<string, object>();
+            var where = this.ParseWhere(string.Join(",", filterTable.filter ?? new List<string>()), param);
+
+            IDbConnection cnn = null;
+            IList result = null;
+            int totalRecord = 0;
+            try
+            {
+                cnn = this.Provider.GetOpenConnection();
+
+                var sb = new StringBuilder($"SELECT {columnSql} FROM {table}");
+                var sqlSummary = new StringBuilder($"SELECT COUNT(*) FROM {table}");
+
+                if (!string.IsNullOrWhiteSpace(where))
+                {
+                    sb.Append($" WHERE {where}");
+                    sqlSummary.Append($" WHERE {where}");
+                }
+
+
+                // Sắp xếp
+                if (filterTable.sortBy?.Count > 0 && filterTable.sortType?.Count > 0)
+                {
+                    sb.Append($" ORDER BY ");
+                    for (int i = 0; i < filterTable.sortBy.Count; i++)
+                    {
+                        sb.Append($" {filterTable.sortBy[i]} {filterTable.sortType[i]}");
+                        if (i != filterTable.sortBy.Count - 1)
+                        {
+                            sb.Append(",");
+                        }
+                    }
+                }
+
+                if (filterTable.page > 0 && filterTable.size > 0)
+                {
+                    sb.Append($"LIMIT {filterTable.size} OFFSET {(filterTable.page - 1) * filterTable.size}");
+                }
+
+                result = await this.Provider.QueryAsync(cnn, sb.ToString(), param);
+                totalRecord = await cnn.ExecuteScalarAsync<int>(sqlSummary.ToString(), param);
+            }
+            finally
+            {
+                this.Provider.CloseConnection(cnn);
+            }
+
+            return new DAResult(200, Resources.getDataSuccess, "", result, totalRecord);
+        }
         #endregion
     }
 }

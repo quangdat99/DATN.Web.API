@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -50,6 +51,17 @@ namespace DATN.Web.Repo.Mysql
         /// <param name="param"></param>
         /// <returns></returns>
         Task<List<T>> QueryAsync<T>(IDbConnection cnn, string commandText, Dictionary<string, object> param,
+            CommandType commandType = CommandType.Text);
+
+        /// <summary>
+        /// Thực hiện sql trả về danh sách dữ liệu
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cnn"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        Task<IList> QueryAsync(IDbConnection cnn, string commandText, Dictionary<string, object> param,
             CommandType commandType = CommandType.Text);
 
         /// <summary>

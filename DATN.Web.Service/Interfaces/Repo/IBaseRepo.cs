@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Model;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -53,5 +56,15 @@ namespace DATN.Web.Service.Interfaces.Repo
         Task<bool> DeleteAsync(object entity);
 
         IConfiguration GetConfiguration();
+
+        /// <summary>
+        /// Lấy dữ liệu combobox
+        /// </summary>
+        Task<IList> GetComboboxPaging(Type type, string colums, string filter, string sort);
+
+        /// <summary>
+        /// Lấy dữ liệu bảng
+        /// </summary>
+        Task<DAResult> GetDataTable<T>(FilterTable filterTable);
     }
 }
