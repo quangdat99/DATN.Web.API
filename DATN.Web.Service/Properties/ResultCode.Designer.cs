@@ -61,6 +61,15 @@ namespace DATN.Web.Service.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 209.
+        /// </summary>
+        public static string DuplicateName {
+            get {
+                return ResourceManager.GetString("DuplicateName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 205.
         /// </summary>
         public static string ExistEmail {

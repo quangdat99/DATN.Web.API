@@ -35,5 +35,10 @@ namespace DATN.Web.Service.Interfaces.Service
         /// </summary>
         Task<DAResult> GetDataTable<T>(FilterTable filterTable);
 
+        /// <summary>
+        /// Lưu dữ liệu
+        /// </summary>
+        Task<T> SaveData<T>(T model, int mode);
+
     }
 }

@@ -12,5 +12,9 @@ namespace DATN.Web.Service.Interfaces.Service
     /// </summary>
     public interface IColorService : IBaseService
     {
+        /// <summary>
+        /// Lưu dữ liệu
+        /// </summary>
+        Task<ColorEntity> SaveData(ColorEntity model, int mode);
     }
 }

@@ -25,10 +25,10 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// 
         /// <summary>
-        public string? status { get; set; }
+        public bool status { get; set; }
         /// <summary>
         /// 
         /// <summary>
-        public string? created_date { get; set; }
+        public DateTime? created_date { get; set; }
     }
 }

@@ -240,6 +240,25 @@ namespace DATN.Web.Api.Controllers
                 return Ok(actionResult);
             }
         }
+
+        /// <summary>
+        /// Lưu dữ liệu
+        /// </summary>
+        [HttpPost("saveData/{mode}")]
+        public virtual async Task<IActionResult> SaveData([FromBody] T model, int mode)
+        {
+            try
+            {
+                var result = await _baseService.SaveData<T>(model, mode);
+                return Ok(new DAResult(200, Resources.addDataSuccess, "", result));
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
         #endregion
     }
 }

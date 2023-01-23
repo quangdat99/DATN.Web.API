@@ -1,4 +1,5 @@
-﻿using DATN.Web.Service.DtoEdit;
+﻿using DATN.Web.Service.Constants;
+using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
@@ -59,6 +60,23 @@ namespace DATN.Web.Service.Service
         public async Task<DAResult> GetDataTable<T>(FilterTable filterTable)
         {
             return await _baseRepo.GetDataTable<T>(filterTable);
+        }
+
+        public virtual async Task<T> SaveData<T>(T model, int mode)
+        {
+            if (mode == (int)ModelState.Add)
+            {
+                if (model.GetType().GetProperty("created_date") != null)
+                {
+                    model.GetType().GetProperty("created_date").SetValue(model, DateTime.Now);
+                }
+                return await _baseRepo.InsertAsync<T>(model);
+            }
+            else
+            {
+                return await _baseRepo.UpdateAsync<T>(model);
+            }
+
         }
     }
 }

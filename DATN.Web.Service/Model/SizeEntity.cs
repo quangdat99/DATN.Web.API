@@ -25,6 +25,10 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Trạng thái: 0 - không sử dụng, 1 - đang sử dụng
         /// <summary>
-        public int status { get; set; }
+        public bool status { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime? created_date { get; set; }
     }
 }

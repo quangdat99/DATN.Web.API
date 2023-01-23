@@ -139,7 +139,7 @@ namespace DATN.Web.Repo.Repo
                     $"SUM(pd.quantity) AS quantity_int, " +
                     $"MIN(pd.sale_price) AS sale_price_int, " +
                     $"FORMAT(SUM(pd.quantity),0) AS quantity, " +
-                    $"IF(p.status = 1, 'Đang bán', 'Ngừng bán') AS status, " +
+                    $"IF(p.status = 1, 'Đang bán', 'Ngừng bán') AS status_name, p.status, " +
                     $"CONCAT(IF (MIN(pd.sale_price) = 0 OR MIN(pd.sale_price) = MAX(pd.sale_price), '', CONCAT(FORMAT(MIN(pd.sale_price), 0), 'đ - ')) , FORMAT(MAX(pd.sale_price), 0), 'đ') AS sale_price " +
                     $"FROM product p LEFT JOIN product_detail pd ON p.product_id = pd.product_id ");
                 var sqlSummary = new StringBuilder($"SELECT COUNT(*) FROM {table}");
