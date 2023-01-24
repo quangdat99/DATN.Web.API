@@ -21,7 +21,7 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// 
         /// <summary>
-        public string? attribute_name { get; set; }
+        public string attribute_name { get; set; }
         /// <summary>
         /// 
         /// <summary>

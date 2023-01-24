@@ -12,5 +12,10 @@ namespace DATN.Web.Service.Interfaces.Service
     /// </summary>
     public interface IAttributeService : IBaseService
     {
+        /// <summary>
+        /// Lưu dữ liệu
+        /// </summary>
+        Task<AttributeEntity> SaveData(AttributeEntity model, int mode);
+
     }
 }

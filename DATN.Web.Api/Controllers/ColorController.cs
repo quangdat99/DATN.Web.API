@@ -50,6 +50,7 @@ namespace DATN.Web.Api.Controllers
             {
                 ColorEntity result = new ColorEntity();
                 result.color_id = Guid.NewGuid();
+                result.status = true;
                 return Ok(new DAResult(200, Resources.addDataSuccess, "", result));
             }
             catch (Exception exception)
@@ -81,5 +82,6 @@ namespace DATN.Web.Api.Controllers
                 return Ok(actionResult);
             }
         }
+    
     }
 }

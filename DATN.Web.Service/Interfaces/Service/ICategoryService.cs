@@ -18,5 +18,9 @@ namespace DATN.Web.Service.Interfaces.Service
         /// Lấy danh sách loại sp
         /// </summary>
         Task<List<CategoryDto>> GetCategory();
+        /// <summary>
+        /// Lưu dữ liệu
+        /// </summary>
+        Task<CategoryEntity> SaveData(CategoryEntity model, int mode);
     }
 }

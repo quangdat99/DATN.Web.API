@@ -176,12 +176,12 @@ namespace DATN.Web.Api.Controllers
         /// Delete một thực thể t
         /// </summary>
         /// <param name="id">id thực thể</param>
-        [HttpDelete("{id}")]
+        [HttpPost("delete/{id}")]
         public async Task<IActionResult> Delete(T t)
         {
             try
             {
-                var result = await _baseRepo.DeleteAsync(t);
+                var result = await _baseService.DeleteAsync(t);
                 if (result)
                 {
                     var actionResult = new DAResult(200, Resources.deleteDataSuccess, "", result);
@@ -195,7 +195,7 @@ namespace DATN.Web.Api.Controllers
             }
             catch (ValidateException exception)
             {
-                var actionResult = new DAResult(400, exception.Message, "", exception.DataErr);
+                var actionResult = new DAResult(exception.resultCode, exception.Message, "", exception.DataErr);
                 return Ok(actionResult);
             }
             catch (Exception exception)

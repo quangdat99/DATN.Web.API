@@ -42,7 +42,7 @@ namespace DATN.Web.Repo.Repo
             {
                 cnn = this.Provider.GetOpenConnection();
 
-                var sb = new StringBuilder($"SELECT {columnSql}, IF(status = 1, 'Đang sử dụng', 'Ngừng sử dụng') AS status FROM {table}");
+                var sb = new StringBuilder($"SELECT {columnSql}, IF(status = TRUE, 'Đang sử dụng', 'Ngừng sử dụng') AS status_name, status FROM {table}");
                 var sqlSummary = new StringBuilder($"SELECT COUNT(*) FROM {table}");
 
                 if (!string.IsNullOrWhiteSpace(where))

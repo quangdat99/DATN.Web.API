@@ -22,9 +22,9 @@ namespace DATN.Web.Service.Service
         public async Task<ColorEntity> SaveData(ColorEntity model, int mode)
         {
             var color = await _colorRepo.GetAsync<ColorEntity>(nameof(ColorEntity.color_name), model.color_name);
-            if (color?.Count > 0)
+            if (color?.Count > 0 && color.Any(x => x.color_id != model.color_id))
             {
-                throw new ValidateException("Màu sắc đã tồn tại, vui lòng nhập màu sắc khác.", model, int.Parse(ResultCode.DuplicateName));
+                throw new ValidateException($"Màu sắc < {model.color_name} > đã tồn tại, vui lòng nhập màu sắc khác.", model, int.Parse(ResultCode.DuplicateName));
             }
             if (mode == (int)ModelState.Add)
             {

@@ -26,5 +26,9 @@ namespace DATN.Web.Service.Model
         /// Tên danh mục sản phẩm
         /// <summary>
         public DateTime created_date { get; set; }
+        /// <summary>
+        /// 
+        /// <summary>
+        public bool status { get; set; }
     }
 }

@@ -88,6 +88,15 @@ namespace DATN.Web.Service.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 210.
+        /// </summary>
+        public static string Incurred {
+            get {
+                return ResourceManager.GetString("Incurred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 208.
         /// </summary>
         public static string WrongAccount {

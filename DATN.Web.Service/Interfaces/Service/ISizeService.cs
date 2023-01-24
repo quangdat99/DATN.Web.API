@@ -12,5 +12,9 @@ namespace DATN.Web.Service.Interfaces.Service
     /// </summary>
     public interface ISizeService : IBaseService
     {
+        /// <summary>
+        /// Lưu dữ liệu
+        /// </summary>
+        Task<SizeEntity> SaveData(SizeEntity model, int mode);
     }
 }

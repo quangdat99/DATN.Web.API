@@ -78,5 +78,11 @@ namespace DATN.Web.Service.Service
             }
 
         }
+
+        public virtual async Task<bool> DeleteAsync(object entity)
+        {
+            var result = await _baseRepo.DeleteAsync(entity);
+            return result;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DATN.Web.Service.Interfaces.Repo;
+﻿using DATN.Web.Service.Exceptions;
+using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
 using DATN.Web.Service.Properties;
@@ -67,5 +68,47 @@ namespace DATN.Web.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Lấy dữ liệu thêm mới
+        /// </summary>
+        [HttpGet("newCode")]
+        public async Task<IActionResult> NewCode()
+        {
+            try
+            {
+                CategoryEntity result = new CategoryEntity();
+                result.category_id = Guid.NewGuid();
+                result.status = true;
+                return Ok(new DAResult(200, Resources.addDataSuccess, "", result));
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Lưu dữ liệu
+        /// </summary>
+        [HttpPost("saveData/{mode}")]
+        public override async Task<IActionResult> SaveData([FromBody] CategoryEntity model, int mode)
+        {
+            try
+            {
+                var result = await _categoryService.SaveData(model, mode);
+                return Ok(new DAResult(200, Resources.addDataSuccess, "", result));
+            }
+            catch (ValidateException exception)
+            {
+                var actionResult = new DAResult(exception.resultCode, exception.Message, "", exception.DataErr);
+                return Ok(actionResult);
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
     }
 }
