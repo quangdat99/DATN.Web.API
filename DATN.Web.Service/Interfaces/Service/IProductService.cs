@@ -45,6 +45,16 @@ namespace DATN.Web.Service.Interfaces.Service
         /// <summary>
         /// Lưu sản phẩm
         /// </summary>
-        Task<object> SaveProduct(SaveProduct saveProduct);
+        Task<object> SaveProduct(ProductEdit saveProduct, int mode);
+        /// <summary>
+        /// Lấy Thông tin sản phẩm về để sửa
+        /// </summary>
+        Task<ProductEdit> GetProductEdit(Guid id);
+
+
+        /// <summary>
+        /// Lấy Thông tin mã sản phẩm mới
+        /// </summary>
+        Task<string> NewCode();
     }
 }

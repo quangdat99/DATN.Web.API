@@ -195,5 +195,60 @@ namespace DATN.Web.Repo.Repo
 
             return new DAResult(200, Resources.getDataSuccess, "", result, totalRecord);
         }
+
+        public async Task<List<AttributeClient>> GetProductAttribute(Guid productId)
+        {
+
+            IDbConnection cnn = null;
+            try
+            {
+                var param = new Dictionary<string, object>();
+                cnn = this.Provider.GetOpenConnection();
+
+                var sb = new StringBuilder($"SELECT pa.product_attribute_id, pa.attribute_id, pa.product_id, pa.value, pa.created_date, a.attribute_name " +
+                "FROM `product_attribute` pa LEFT JOIN `attribute` a ON pa.attribute_id = a.attribute_id " +
+                $"WHERE pa.product_id = '{productId}'");
+
+                var result = await this.Provider.QueryAsync<AttributeClient>(cnn, sb.ToString(), param);
+                return result;
+            }
+            finally
+            {
+                this.Provider.CloseConnection(cnn);
+            }
+        }
+
+        public async Task<List<CategoryDtoEdit>> GetProductCategory(Guid productId)
+        {
+
+            IDbConnection cnn = null;
+            try
+            {
+                var param = new Dictionary<string, object>();
+                cnn = this.Provider.GetOpenConnection();
+
+                var sb = new StringBuilder($"SELECT pc.product_category_id, pc.product_id, pc.category_id, c.category_name " +
+                "FROM product_category pc LEFT JOIN category c ON pc.category_id = c.category_id " +
+                $"WHERE pc.product_id = '{productId}';");
+
+                var result = await this.Provider.QueryAsync<CategoryDtoEdit>(cnn, sb.ToString(), param);
+                return result;
+            }
+            finally
+            {
+                this.Provider.CloseConnection(cnn);
+            }
+        }
+
+        public async Task<ProductEntity> GetProductLastest()
+        {
+            var sql = ("SELECT * FROM product p ORDER BY p.created_date DESC LIMIT 1;");
+
+            var param = new Dictionary<string, object>
+            {
+            };
+            var result = await Provider.QueryAsync<ProductEntity>(sql, param);
+            return result?.FirstOrDefault();
+        }
     }
 }

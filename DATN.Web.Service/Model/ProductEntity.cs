@@ -43,6 +43,10 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Trạng thái của sản phẩm (Đang bán/ Ngừng bán)
         /// <summary>
-        public int status { get; set; }
+        public bool status { get; set; }
+        /// <summary>
+        /// Mức độ nổi bật 1 --> 10
+        /// </summary>
+        public int outstanding { get; set; }
     }
 }

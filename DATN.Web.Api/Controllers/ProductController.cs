@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Exceptions;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
@@ -294,12 +295,12 @@ namespace DATN.Web.Api.Controllers
         /// <summary>
         /// Lấy danh sách bình luận của sản phẩm
         /// </summary>
-        [HttpPost("saveProduct")]
-        public async Task<IActionResult> SaveProduct(SaveProduct saveProduct)
+        [HttpPost("saveProduct/{mode}")]
+        public async Task<IActionResult> SaveProduct([FromBody] ProductEdit saveProduct, int mode)
         {
             try
             {
-                var res = await _productService.SaveProduct(saveProduct);
+                var res = await _productService.SaveProduct(saveProduct, mode);
                 if (res != null)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
@@ -311,11 +312,66 @@ namespace DATN.Web.Api.Controllers
                     return Ok(actionResult);
                 }
             }
+            catch (ValidateException exception)
+            {
+                var actionResult = new DAResult(exception.resultCode, exception.Message, "", exception.DataErr);
+                return Ok(actionResult);
+            }
             catch (Exception exception)
             {
                 var actionResult = new DAResult(500, Resources.error, exception.Message, new List<object>());
                 return Ok(actionResult);
             }
         }
+
+        /// <summary>
+        /// Lấy Thông tin sản phẩm về để sửa
+        /// </summary>
+        [HttpGet("edit/{id}")]
+        public async Task<IActionResult> GetProductEdit(Guid id)
+        {
+            try
+            {
+                var res = await _productService.GetProductEdit(id);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+        /// <summary>
+        /// Lấy dữ liệu thêm mới
+        /// </summary>
+        [HttpGet("newCode")]
+        public async Task<IActionResult> NewCode()
+        {
+            try
+            {
+                ProductEdit result = new ProductEdit();
+                result.product_id = Guid.NewGuid();
+                result.description = String.Empty;
+                result.outstanding = 1;
+                result.status = true;
+                result.product_code = await _productService.NewCode();
+                return Ok(new DAResult(200, Resources.addDataSuccess, "", result));
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
     }
 }

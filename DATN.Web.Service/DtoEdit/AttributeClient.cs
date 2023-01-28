@@ -10,6 +10,6 @@ namespace DATN.Web.Service.DtoEdit
     public class AttributeClient: ProductAttributeEntity
     {
         public string attribute_name { get; set; }
-        public string state { get; set; }
+        public int state { get; set; }
     }
 }

@@ -64,6 +64,6 @@ namespace DATN.Web.Service.Model
         /// <summary>
         /// Giá cũ
         /// </summary>
-        public decimal sale_price_old { get; set; }
+        public decimal? sale_price_old { get; set; }
     }
 }
