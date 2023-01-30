@@ -38,6 +38,11 @@ namespace DATN.Web.Service.Constants
         /// <summary>
         /// Giao hàng thất bại/Trả hàng
         /// </summary>
-        Undelivered = 6
+        Undelivered = 6,
+
+        /// <summary>
+        /// Hoàn hàng trở lại cửa hàng
+        /// </summary>
+        Refund = 7
     }
 }

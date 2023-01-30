@@ -147,7 +147,28 @@ namespace DATN.Web.Repo.Repo
             {
                 cnn = this.Provider.GetOpenConnection();
 
-                var sb = new StringBuilder($"SELECT {columnSql}, IF(status = 1, 'Đang sử dụng', 'Ngừng sử dụng') AS status_name, status FROM {table}");
+                var sb = new StringBuilder(
+                    $"SELECT o.order_id, o.order_code,"+
+                    " GROUP_CONCAT(CONCAT(CONCAT('- ',po.product_name), IF(po.color_name IS NOT NULL, CONCAT(' (', po.color_name, ')'), ''), IF(po.size_name IS NOT NULL, CONCAT(' (', po.size_name, ')'), '')) SEPARATOR '; ') as description," +
+                    " CASE WHEN status = 5 THEN 'Chờ xác nhận' " +
+                    "WHEN status = 2 THEN 'Chờ lấy hàng' " +
+                    "WHEN status = 3 THEN 'Đang giao hàng' " +
+                    "WHEN status = 4 THEN 'Đã hủy đơn' " +
+                    "WHEN status = 1 THEN 'Giao thành công' " +
+                    "WHEN status = 6 THEN 'Giao hàng thất bại' " +
+                    "WHEN status = 7 THEN 'Đã hoàn trả lại' " +
+                    "ELSE '' END " +
+                    " AS status_name, FORMAT(total_amount, 0) as totalAmount, o.status,"+
+                    " DATE_FORMAT(created_date, '%d-%m-%Y') as str_created_date," + // ngày tạo đơn hàng
+                    " DATE_FORMAT(cancel_date, '%d-%m-%Y') as str_cancel_date," + // Ngày hủy đơn hàng
+                    " DATE_FORMAT(statrt_delivery_date, '%d-%m-%Y') as str_statrt_delivery_date," + // Ngày bắt đầu giao hàng
+                    " DATE_FORMAT(delivery_date, '%d-%m-%Y') as str_delivery_date," + // Ngày giao hàng
+                    " DATE_FORMAT(success_date, '%d-%m-%Y') as str_success_date," + // Ngày giao hàng thành công
+                    " DATE_FORMAT(delivery_failed_date, '%d-%m-%Y') as str_delivery_failed_date," +// Ngày giao hàng thất bại
+                    " DATE_FORMAT(refund_date, '%d-%m-%Y') as str_refund_date" + // Ngày hoàn hàng trở lại cửa hàng
+                    $" FROM {table} o LEFT JOIN `product_order` po ON o.order_id = po.order_id " +
+                    $" GROUP BY o.order_id, o.order_code, status_name, o.status, str_created_date, str_cancel_date, str_statrt_delivery_date, str_delivery_date," +
+                    $" str_success_date, str_delivery_failed_date, str_refund_date ");
                 var sqlSummary = new StringBuilder($"SELECT COUNT(*) FROM {table}");
 
                 if (!string.IsNullOrWhiteSpace(where))
@@ -163,7 +184,19 @@ namespace DATN.Web.Repo.Repo
                     sb.Append($" ORDER BY ");
                     for (int i = 0; i < filterTable.sortBy.Count; i++)
                     {
-                        sb.Append($" {filterTable.sortBy[i]} {filterTable.sortType[i]}");
+
+                        if (filterTable.sortBy[i] == "totalAmount")
+                        {
+                            sb.Append($" total_amount {filterTable.sortType[i]}");
+                        }
+                        else if (filterTable.sortBy[i] == "status_name")
+                        {
+                            sb.Append($" status {filterTable.sortType[i]}");
+                        }
+                        else
+                        {
+                            sb.Append($" {filterTable.sortBy[i]} {filterTable.sortType[i]}");
+                        }
                         if (i != filterTable.sortBy.Count - 1)
                         {
                             sb.Append(",");

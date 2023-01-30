@@ -42,44 +42,53 @@ namespace DATN.Web.Service.Model
         /// Ngày tạo đơn hàng
         /// <summary>
         public DateTime created_date { get; set; }
-
+        /// <summary>
+        /// Ngày Xác nhận đơn hàng
+        /// <summary>
+        public DateTime? confirm_date { get; set; }
+        /// <summary>
+        /// Ngày bắt đầu giao hàng
+        /// <summary>
+        public DateTime? statrt_delivery_date { get; set; }
         /// <summary>
         /// Ngày hủy đơn hàng
         /// <summary>
         public DateTime? cancel_date { get; set; }
-
         /// <summary>
         /// Ngày giao hàng
         /// <summary>
         public DateTime? delivery_date { get; set; }
-
         /// <summary>
         /// Ngày giao hàng thành công
         /// <summary>
-        public DateTime? succes_date { get; set; }
-
+        public DateTime? success_date { get; set; }
+        /// <summary>
+        /// Ngày giao hàng thất bại
+        /// <summary>
+        public DateTime? delivery_failed_date { get; set; }
+        /// <summary>
+        /// Ngày hoàn hàng trở lại cửa hàng
+        /// <summary>
+        public DateTime? refund_date { get; set; }
         /// <summary>
         /// Số điện thoại nhận hàng
         /// <summary>
         public string phone { get; set; }
-
         /// <summary>
         /// Địa chỉ nhận hàng
         /// <summary>
         public string address { get; set; }
-
         /// <summary>
         /// Giá tiền được  giảm sau khi áp dụng mã giảm giá
         /// <summary>
         public decimal? voucher_amount { get; set; }
-
         /// <summary>
         /// Tổng số tiền của sản phẩm
         /// <summary>
         public decimal product_amount { get; set; }
         /// <summary>
         /// Mã đơn hàng
-        /// </summary>
-        public string order_code { get; set; }
+        /// <summary>
+        public string? order_code { get; set; }
     }
 }
