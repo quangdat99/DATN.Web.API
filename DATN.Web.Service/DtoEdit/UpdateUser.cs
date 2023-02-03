@@ -44,6 +44,7 @@ namespace DATN.Web.Service.DtoEdit
         /// user_id
         /// </summary>
         public string email { get; set; }
+        public bool is_block { get; set; }
 
     }
 }

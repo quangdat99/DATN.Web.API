@@ -36,5 +36,10 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// Lấy số lượng trạng thái đơn hàng
         /// </summary>
         Task<OrderStatusCount> OrderStatusCount(Guid userIdd);
+        /// <summary>
+        /// Lấy thông tin chi tiết đơn hàng
+        /// </summary>
+        /// <param name="id">id đơn hàng</param>
+        Task<OrderInfo> GetOrderInfo(Guid id);
     }
 }

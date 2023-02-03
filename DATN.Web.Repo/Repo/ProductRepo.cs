@@ -126,7 +126,7 @@ namespace DATN.Web.Repo.Repo
             var columnSql = this.ParseColumn(string.Join(",", filterTable.fields));
 
             var param = new Dictionary<string, object>();
-            var where = this.ParseWhere(string.Join(",", filterTable.filter ?? new List<string>()), param);
+            var where = this.ParseWhere(filterTable.filter, param);
 
             IDbConnection cnn = null;
             IList result = null;

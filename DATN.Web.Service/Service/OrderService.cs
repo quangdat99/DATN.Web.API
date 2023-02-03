@@ -47,6 +47,16 @@ namespace DATN.Web.Service.Service
             {
                 res.status = OrderStatus.Cancelled;
                 await _orderRepo.UpdateAsync<OrderEntity>(res, "status");
+                var productOrders = await _orderRepo.GetAsync<ProductOrderEntity>(nameof(ProductOrderEntity.order_id), id);
+                foreach (var item in productOrders)
+                {
+                    var productDetail = await _orderRepo.GetByIdAsync<ProductDetailEntity>(item.product_detail_id);
+                    if (productDetail != null)
+                    {
+                        productDetail.quantity += item.quantity;
+                        await _orderRepo.UpdateAsync<ProductDetailEntity>(productDetail, nameof(ProductDetailEntity.quantity));
+                    }
+                }
             }
 
             return res;
@@ -111,6 +121,46 @@ namespace DATN.Web.Service.Service
         {
             var data = await _orderRepo.OrderStatusCount(userId);
             return data;
+        }
+
+        public async Task<OrderInfo> ChangeStatus(ChangeStatus changeStatus)
+        {
+            var order = await _orderRepo.GetByIdAsync<OrderEntity>(changeStatus.order_id);
+            var productOrders = await _orderRepo.GetAsync<ProductOrderEntity>(nameof(ProductOrderEntity.order_id), changeStatus.order_id);
+            order.status = (OrderStatus)changeStatus.status;
+            switch (order.status)
+            {
+                case OrderStatus.Pending:
+                    order.statrt_delivery_date = DateTime.Now;
+                    await _orderRepo.UpdateAsync<OrderEntity>(order, $"{nameof(OrderEntity.status)},{nameof(OrderEntity.statrt_delivery_date)}");
+                    break;
+                case OrderStatus.Delivering:
+                    order.delivery_date = DateTime.Now;
+                    await _orderRepo.UpdateAsync<OrderEntity>(order, $"{nameof(OrderEntity.status)},{nameof(OrderEntity.delivery_date)}");
+                    break;
+                case OrderStatus.Delivered:
+                    order.success_date = DateTime.Now;
+                    await _orderRepo.UpdateAsync<OrderEntity>(order, $"{nameof(OrderEntity.status)},{nameof(OrderEntity.success_date)}");
+                    break;
+                case OrderStatus.Undelivered:
+                    order.delivery_failed_date = DateTime.Now;
+                    await _orderRepo.UpdateAsync<OrderEntity>(order, $"{nameof(OrderEntity.status)},{nameof(OrderEntity.delivery_failed_date)}");
+                    break;
+                case OrderStatus.Refund:
+                    order.refund_date = DateTime.Now;
+                    await _orderRepo.UpdateAsync<OrderEntity>(order, $"{nameof(OrderEntity.status)},{nameof(OrderEntity.refund_date)}");
+                    foreach (var item in productOrders)
+                    {
+                        var productDetail = await _orderRepo.GetByIdAsync<ProductDetailEntity>(item.product_detail_id);
+                        if (productDetail != null)
+                        {
+                            productDetail.quantity += item.quantity;
+                            await _orderRepo.UpdateAsync<ProductDetailEntity>(productDetail, nameof(ProductDetailEntity.quantity));
+                        }
+                    }
+                    break;
+            }
+            return await _orderRepo.GetOrderInfo(changeStatus.order_id);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DATN.Web.Repo.Repo;
 using DATN.Web.Service.Constants;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Interfaces.Repo;
@@ -141,6 +142,61 @@ namespace DATN.Web.Api.Controllers
             try
             {
                 var res = await _orderService.OrderStatusCount(context.UserId);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
+
+        /// <summary>
+        /// Lấy thông tin đơn hàng
+        /// </summary>
+        [HttpGet("info/{id}")]
+        public async Task<IActionResult> GetOrderInfo(Guid id)
+        {
+            try
+            {
+                var res = await _orderRepo.GetOrderInfo(id);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Thay đổi trạng thái đơn hàng
+        /// </summary>
+        [HttpPost("changeStatus")]
+        public async Task<IActionResult> ChangeStatus(ChangeStatus changeStatus)
+        {
+            try
+            {
+                var res = await _orderService.ChangeStatus(changeStatus);
                 if (res != null)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);

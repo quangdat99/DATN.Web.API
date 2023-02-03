@@ -34,5 +34,9 @@ namespace DATN.Web.Service.Interfaces.Service
         /// </summary>
         /// <param name="userId"></param>
         Task<OrderStatusCount> OrderStatusCount(Guid userId);
+        /// <summary>
+        /// thay đổi trạng thái đơn hàng
+        /// </summary>
+        Task<OrderInfo> ChangeStatus(ChangeStatus changeStatus);
     }
 }

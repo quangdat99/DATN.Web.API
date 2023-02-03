@@ -255,5 +255,16 @@ namespace DATN.Web.Service.Service
             var data = await this.GetContextReturn(context, jwtTokenConfig);
             return data;
         }
+
+        public async Task<UserEntity> UpdateStatus(bool status, Guid userId)
+        {
+            var user = await _userRepo.GetByIdAsync<UserEntity>(userId);
+            if (user != null)
+            {
+                user.is_block = status;
+                return await _userRepo.UpdateAsync<UserEntity>(user, nameof(UserEntity.is_block));
+            }
+            return user;
+        }
     }
 }

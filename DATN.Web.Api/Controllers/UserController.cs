@@ -72,6 +72,34 @@ namespace DATN.Web.Api.Controllers
         }
 
         /// <summary>
+        /// Lấy Thông tin người dùng
+        /// </summary>
+        [HttpGet("getUser/{userId}")]
+        public async Task<IActionResult> getUser(Guid userId)
+        {
+            try
+            {
+                var res = await _userRepo.GetUserInfo(userId);
+                res.avatar = Common.GetUrlImage(Request.Host.ToString(), res.avatar);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<UserEntity>());
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<UserEntity>());
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
         /// Lấy danh sách địa chỉ của một người dùng
         /// </summary>
         /// <param name="userId">định danh người dùng</param>
@@ -224,6 +252,34 @@ namespace DATN.Web.Api.Controllers
                 {
                     res.avatar = Common.GetUrlImage(Request.Host.ToString(), res.avatar);
                     var actionResult = new DAResult(200, "Cập nhật thông tin tài khoản thành công!", "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, "Cập nhật thất bại!", "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Cập nhật trạng thái Bị chặn/ Đang hoạt dộng
+        /// </summary>
+        [HttpPut("updateStatus")]
+        public async Task<IActionResult> UpdateStatus([FromBody] UpdateUser userUpdate)
+        {
+            try
+            {
+                var res = await _userService.UpdateStatus(userUpdate.is_block, userUpdate.user_id);
+                if (res != null)
+                {
+                    res.avatar = Common.GetUrlImage(Request.Host.ToString(), res.avatar);
+                    var actionResult = new DAResult(200, "Cập nhật thông tin khách hàng thành công!", "", res);
                     return Ok(actionResult);
                 }
                 else

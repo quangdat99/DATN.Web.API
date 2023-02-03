@@ -39,6 +39,10 @@ namespace DATN.Web.Service.Interfaces.Service
         /// Lấy token
         /// </summary>
         Task<Dictionary<string, object>> GetToken(Guid userId);
-        
+
+        /// <summary>
+        /// chập nhật trạng thái
+        /// </summary>
+        Task<UserEntity> UpdateStatus(bool status, Guid userId);
     }
 }

@@ -10,6 +10,8 @@ using DATN.Web.Service.Model;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Exceptions;
 using DATN.Web.Service.Properties;
+using Dapper;
+using System.Collections;
 
 namespace DATN.Web.Repo.Repo
 {
@@ -70,6 +72,71 @@ namespace DATN.Web.Repo.Repo
             return result.FirstOrDefault();
 
         }
+
+        public override async Task<DAResult> GetDataTable<T>(FilterTable filterTable)
+        {
+            var table = this.GetTableName(typeof(UserEntity));
+            var columnSql = this.ParseColumn(string.Join(",", filterTable.fields));
+
+            var param = new Dictionary<string, object>();
+            var where = this.ParseWhere(filterTable.filter, param);
+
+            IDbConnection cnn = null;
+            IList result = null;
+            int totalRecord = 0;
+            try
+            {
+                cnn = this.Provider.GetOpenConnection();
+
+                var sb = new StringBuilder($"SELECT user_id, CONCAT(first_name, ' ', last_name) AS user_name, email, phone, " +
+                    $" CASE WHEN gender = 1 THEN 'Nam' " +
+                    $" WHEN gender = 2 THEN 'Nữ' " +
+                    $" ELSE 'Khác' END as gender_name, " +
+                    $" IF(is_block = true, 'Đã chặn', 'Đang hoạt động') as active" +
+                    $" FROM {table} " +
+                    $" WHERE role <> 2");
+                var sqlSummary = new StringBuilder($"SELECT COUNT(*) FROM {table} WHERE role <> 2");
+
+                if (!string.IsNullOrWhiteSpace(where))
+                {
+                    sb.Append($" WHERE {where}");
+                    sqlSummary.Append($" WHERE {where}");
+                }
+
+
+                // Sắp xếp
+                if (filterTable.sortBy?.Count > 0 && filterTable.sortType?.Count > 0)
+                {
+                    sb.Append($" ORDER BY ");
+                    for (int i = 0; i < filterTable.sortBy.Count; i++)
+                    {
+                        sb.Append($" {filterTable.sortBy[i]} {filterTable.sortType[i]}");
+                        if (i != filterTable.sortBy.Count - 1)
+                        {
+                            sb.Append(",");
+                        }
+                    }
+                }
+                else
+                {
+                    sb.Append($" ORDER BY user_name DESC");
+                }
+
+                if (filterTable.page > 0 && filterTable.size > 0)
+                {
+                    sb.Append($" LIMIT {filterTable.size} OFFSET {(filterTable.page - 1) * filterTable.size}");
+                }
+
+                result = await this.Provider.QueryAsync(cnn, sb.ToString(), param);
+                totalRecord = await cnn.ExecuteScalarAsync<int>(sqlSummary.ToString(), param);
+            }
+            finally
+            {
+                this.Provider.CloseConnection(cnn);
+            }
+
+            return new DAResult(200, Resources.getDataSuccess, "", result, totalRecord);
+        }
+
     }
 }
-
