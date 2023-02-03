@@ -95,7 +95,17 @@ namespace DATN.Web.Repo.Repo
                 param, CommandType.StoredProcedure);
             return res;
         }
-
+        public async Task<List<ProductClient>> GetProductRelationOrder(string listProductId)
+        {
+            var param = new Dictionary<string, object>()
+            {
+                { "$ListProductId", listProductId },
+            };
+            var res = await this.Provider.QueryAsync<ProductClient>("Proc_GetProductRelationOrder",
+                param, CommandType.StoredProcedure);
+            return res;
+        }
+        
         public async Task<List<object>> GetRateOption(Guid id)
         {
             var param = new Dictionary<string, object>()

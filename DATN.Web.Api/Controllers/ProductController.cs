@@ -121,6 +121,33 @@ namespace DATN.Web.Api.Controllers
         }
 
         /// <summary>
+        /// Lấy Thông tin sản phẩm liên quan
+        /// </summary>
+        [HttpPost("relation")]
+        public async Task<IActionResult> GetProductRelationOrder([FromBody] string listProductId)
+        {
+            try
+            {
+                var res = await _productRepo.GetProductRelationOrder(listProductId);
+                if (res != null)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<ProductClient>());
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<ProductClient>());
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
         /// Get List Of Products
         /// </summary>
         /// <param name="cart_id">Cart Id</param>

@@ -36,6 +36,11 @@ namespace DATN.Web.Service.Interfaces.Repo
         Task<List<ProductClient>> GetProductRelation(Guid id, int mode);
 
         /// <summary>
+        /// Lấy danh sách sản phẩm liên quan theo đơn hàng
+        /// </summary>
+        Task<List<ProductClient>> GetProductRelationOrder(string listProductId);
+        
+        /// <summary>
         /// Lấy danh sách các option đánh giá của sp
         /// </summary>
         Task<List<object>> GetRateOption(Guid id);
