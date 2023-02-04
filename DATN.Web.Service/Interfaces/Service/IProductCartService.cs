@@ -23,7 +23,7 @@ namespace DATN.Web.Service.Interfaces.Service
         /// <summary>
         /// Lấy danh sách sp trong giỏ hàng
         /// </summary>
-        Task<List<object>> GetProductCart(Guid cartId);
+        Task<List<ProductCart>> GetProductCart(Guid cartId);
         /// <summary>
         /// Mua hàng
         /// </summary>

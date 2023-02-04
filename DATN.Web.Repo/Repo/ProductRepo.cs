@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using DATN.Web.Service.Contexts;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Model;
@@ -117,7 +118,7 @@ namespace DATN.Web.Repo.Repo
             return res;
         }
 
-        public async Task<List<object>> GetCommentProduct(Guid id, string filterCode, int pageNumber, int pageSize)
+        public async Task<List<CommentInfo>> GetCommentProduct(Guid id, string filterCode, int pageNumber, int pageSize)
         {
             var param = new Dictionary<string, object>()
             {
@@ -126,8 +127,9 @@ namespace DATN.Web.Repo.Repo
                 { "$pageNumber", pageNumber },
                 { "$pageSize", pageSize },
             };
-            var res = await this.Provider.QueryAsync<object>("Proc_GetCommentProduct",
+            var res = await this.Provider.QueryAsync<CommentInfo>("Proc_GetCommentProduct",
                 param, CommandType.StoredProcedure);
+
             return res;
         }
         public override async Task<DAResult> GetDataTable<T>(FilterTable filterTable)

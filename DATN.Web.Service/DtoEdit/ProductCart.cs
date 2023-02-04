@@ -39,7 +39,7 @@ namespace DATN.Web.Service.DtoEdit
         /// <summary>
         /// Giảm giáo bao nhiêu %
         /// </summary>
-        public decimal? product_discount { get; set; }
+        public int quantity_max { get; set; }
         /// <summary>
         /// Giá cũ
         /// </summary>

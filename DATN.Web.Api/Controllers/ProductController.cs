@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DATN.Web.Service.Contexts;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Exceptions;
 using DATN.Web.Service.Interfaces.Repo;
@@ -303,6 +304,11 @@ namespace DATN.Web.Api.Controllers
                 var res = await _productRepo.GetCommentProduct(filterComment.product_id, filterComment.filterCode, filterComment.pageNumber, filterComment.pageSize);
                 if (res != null)
                 {
+                    foreach (var item in res)
+                    {
+                        item.avatar = Common.GetUrlImage(Request.Host.ToString(), item.avatar);
+                        item.img_url = Common.GetUrlImage(Request.Host.ToString(), item.img_url);
+                    }
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
                     return Ok(actionResult);
                 }

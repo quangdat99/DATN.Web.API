@@ -1,5 +1,6 @@
 ﻿using DATN.Web.Service.Constants;
 using DATN.Web.Service.DtoEdit;
+using DATN.Web.Service.Exceptions;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
@@ -70,43 +71,71 @@ namespace DATN.Web.Service.Service
             order.order_code = DateTime.Now.ToString("yyyyMMddHHmmss");
 
             var productOrder = new List<ProductOrderEntity>();
-
-            var data = await _productCartRepo.GetProductCart(checkout.cart_id);
-            var productCarts = JsonConvert.DeserializeObject<List<ProductCart>>(JsonConvert.SerializeObject(data));
-
-            foreach (var p in checkout.listProduct)
+            if (checkout.mode == 1)
             {
-                var productDetail = await _productCartRepo.GetByIdAsync<ProductDetailEntity>(p.product_detail_id);
-                if (productDetail != null && p.quantity <= productDetail.quantity)
+
+                var productCarts = await _productCartRepo.GetProductCart(checkout.cart_id);
+
+                foreach (var p in checkout.listProduct)
                 {
-                    var productCart = productCarts.Find(x => x.product_cart_id == p.product_cart_id);
-                    if (productCart != null)
+                    var productDetail = await _productCartRepo.GetByIdAsync<ProductDetailEntity>(p.product_detail_id);
+                    if (productDetail != null && p.quantity <= productDetail.quantity)
                     {
-                        var item = new ProductOrderEntity()
+                        var productCart = productCarts.Find(x => x.product_cart_id == p.product_cart_id);
+                        if (productCart != null)
                         {
-                            product_order_id = Guid.NewGuid(),
-                            order_id = order.order_id,
-                            product_id = p.product_id,
-                            product_detail_id = p.product_detail_id,
-                            product_amount = productCart.sale_price,
-                            product_name = productCart.product_name,
-                            color_name = productCart.color_name,
-                            size_name = productCart.size_name,
-                            url_img = productCart.img_url,
-                            quantity = productCart.quantity,
-                            product_amount_old = productCart.sale_price_old ?? 0
-                        };
-                        productOrder.Add(item);
-                        productDetail.quantity = productDetail.quantity - productCart.quantity;
-                        order.product_amount += item.product_amount * item.quantity;
-                        order.total_amount += item.product_amount * item.quantity;
-                        var param = new ProductCartEntity()
-                        {
-                            product_cart_id = productCart.product_cart_id ?? Guid.NewGuid(),
-                        };
-                        await _productCartRepo.DeleteAsync(param);
+                            var item = new ProductOrderEntity()
+                            {
+                                product_order_id = Guid.NewGuid(),
+                                order_id = order.order_id,
+                                product_id = p.product_id,
+                                product_detail_id = p.product_detail_id,
+                                product_amount = productCart.sale_price,
+                                product_name = productCart.product_name,
+                                color_name = productCart.color_name,
+                                size_name = productCart.size_name,
+                                url_img = productCart.img_url,
+                                quantity = productCart.quantity,
+                                product_amount_old = productCart.sale_price_old ?? 0
+                            };
+                            productOrder.Add(item);
+                            productDetail.quantity = productDetail.quantity - productCart.quantity;
+                            order.product_amount += item.product_amount * item.quantity;
+                            order.total_amount += item.product_amount * item.quantity;
+                            var param = new ProductCartEntity()
+                            {
+                                product_cart_id = productCart.product_cart_id ?? Guid.NewGuid(),
+                            };
+                            await _productCartRepo.DeleteAsync(param);
+                        }
+
+
+                        await _productCartRepo.UpdateAsync<ProductDetailEntity>(productDetail, "quantity");
                     }
                     else
+                    {
+                        var delete = JsonConvert.DeserializeObject<ProductCartEntity>(JsonConvert.SerializeObject(p));
+                        await _productCartRepo.DeleteAsync(delete);
+                        if (productDetail == null)
+                        {
+
+                            throw new ValidateException($"Sản phẩm {p.product_name} không tồn tại", p, 400);
+                        }
+                        if (p.quantity > productDetail.quantity)
+                        {
+                            throw new ValidateException($"Sản phẩm {p.product_name} vượt quá số lượng", p, 400);
+
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                foreach (var p in checkout.listProduct)
+                {
+                    var productDetail = await _productCartRepo.GetByIdAsync<ProductDetailEntity>(p.product_detail_id);
+                    if (productDetail != null && p.quantity <= productDetail.quantity)
                     {
                         var item = new ProductOrderEntity()
                         {
@@ -123,19 +152,32 @@ namespace DATN.Web.Service.Service
                             product_amount_old = p.sale_price_old ?? 0
                         };
                         productOrder.Add(item);
-                        productDetail.quantity = p.quantity - p.quantity;
+                        productDetail.quantity = productDetail.quantity - p.quantity;
                         order.product_amount += item.product_amount * item.quantity;
                         order.total_amount += item.product_amount * item.quantity;
+
+                        await _productCartRepo.UpdateAsync<ProductDetailEntity>(productDetail, "quantity");
                     }
+                    else
+                    {
 
-                    await _productCartRepo.UpdateAsync<ProductDetailEntity>(productDetail, "quantity");
+                        if (productDetail == null)
+                        {
+
+                            throw new ValidateException($"Sản phẩm <{p.product_name}> không tồn tại", p, 400);
+                        }
+                        if (p.quantity > productDetail.quantity)
+                        {
+                            throw new ValidateException($"Sản phẩm <{p.product_name}> vượt quá số lượng", p, 400);
+
+                        }
+                    }
                 }
-               
-            }
 
+            }
             foreach (var item in productOrder)
             {
-               await _productCartRepo.InsertAsync<ProductOrderEntity>(item);
+                await _productCartRepo.InsertAsync<ProductOrderEntity>(item);
             }
             await _productCartRepo.InsertAsync<OrderEntity>(order);
 
@@ -152,9 +194,19 @@ namespace DATN.Web.Service.Service
             return data;
         }
 
-        public async Task<List<object>> GetProductCart(Guid cartId)
+        public async Task<List<ProductCart>> GetProductCart(Guid cartId)
         {
             var productCarts = await _productCartRepo.GetProductCart(cartId);
+            foreach (var productCart in productCarts)
+            {
+                var productDetails = _productCartRepo.GetByIdAsync<ProductDetailEntity>(productCart.product_detail_id);
+                if (productDetails == null || productCart.quantity > productCart.quantity_max)
+                {
+                    var item = JsonConvert.DeserializeObject<ProductCartEntity>(JsonConvert.SerializeObject(productCart));
+                    await _productCartRepo.DeleteAsync(item);
+                }
+            }
+            productCarts = await _productCartRepo.GetProductCart(cartId);
             return productCarts;
         }
 

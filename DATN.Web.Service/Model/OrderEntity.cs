@@ -90,5 +90,9 @@ namespace DATN.Web.Service.Model
         /// Mã đơn hàng
         /// <summary>
         public string? order_code { get; set; }
+        /// <summary>
+        /// Đơn hàng đã được đánh gái chưa
+        /// <summary>
+        public bool? is_comment { get; set; }
     }
 }

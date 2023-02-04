@@ -38,5 +38,9 @@ namespace DATN.Web.Service.Interfaces.Service
         /// thay đổi trạng thái đơn hàng
         /// </summary>
         Task<OrderInfo> ChangeStatus(ChangeStatus changeStatus);
+        /// <summary>
+        /// bình luận dánh giá đơn hàng
+        /// </summary>
+        Task<bool> CommentProduct(CommentProduct commentProduct);
     }
 }

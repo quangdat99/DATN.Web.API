@@ -48,7 +48,7 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// <summary>
         /// Lấy danh sách bình luận của sản phẩm
         /// </summary>
-        Task<List<object>> GetCommentProduct(Guid id, string filterCode, int pageNumber, int pageSize);
+        Task<List<CommentInfo>> GetCommentProduct(Guid id, string filterCode, int pageNumber, int pageSize);
 
         /// <summary>
         /// Lấy danh sách thuộc tính của sản phẩm

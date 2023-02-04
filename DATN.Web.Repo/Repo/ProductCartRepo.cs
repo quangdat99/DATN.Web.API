@@ -25,13 +25,13 @@ namespace DATN.Web.Repo.Repo
 
         }
 
-        public async Task<List<object>> GetProductCart(Guid cartId)
+        public async Task<List<ProductCart>> GetProductCart(Guid cartId)
         {
             var param = new Dictionary<string, object>()
             {
                 { "$cartId", cartId },
             };
-            var result = await this.Provider.QueryAsync<object>("Proc_ProductCart",
+            var result = await this.Provider.QueryAsync<ProductCart>("Proc_ProductCart",
                 param, CommandType.StoredProcedure);
 
             return result;

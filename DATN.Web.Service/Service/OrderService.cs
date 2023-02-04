@@ -3,21 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DATN.Web.Service.Constants;
+using DATN.Web.Service.Contexts;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Exceptions;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
+using Microsoft.AspNetCore.Http;
 
 namespace DATN.Web.Service.Service
 {
     public class OrderService : BaseService, IOrderService
     {
         private IOrderRepo _orderRepo;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public OrderService(IOrderRepo orderRepo) : base(orderRepo)
+        public OrderService(IOrderRepo orderRepo,
+            IHttpContextAccessor httpContextAccessor) : base(orderRepo)
         {
             _orderRepo = orderRepo;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -161,6 +166,27 @@ namespace DATN.Web.Service.Service
                     break;
             }
             return await _orderRepo.GetOrderInfo(changeStatus.order_id);
+        }
+
+        public async Task<bool> CommentProduct(CommentProduct commentProduct)
+        {
+            var order = await _orderRepo.GetByIdAsync<OrderEntity>(commentProduct.order_id);
+            if (order != null)
+            {
+                order.is_comment = true;
+                await _orderRepo.UpdateAsync<OrderEntity>(order, nameof(OrderEntity.is_comment));
+            }
+            foreach (var item in commentProduct.commentProducts)
+            {
+                var product = await _orderRepo.GetByIdAsync<ProductEntity>(item.product_id);
+                if (product != null)
+                {
+
+                    item.img_url = Common.SaveImage(_httpContextAccessor.HttpContext.Request.Host.Value, item.img_url);
+                    await _orderRepo.InsertAsync<CommentEntity>(item);
+                }
+            }
+            return true;
         }
     }
 }

@@ -16,6 +16,6 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// <summary>
         /// Lấy danh sách sp trong giỏ hàng
         /// </summary>
-        Task<List<object>> GetProductCart(Guid cartId);
+        Task<List<ProductCart>> GetProductCart(Guid cartId);
     }
 }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DATN.Web.Repo.Repo;
 using DATN.Web.Service.Constants;
+using DATN.Web.Service.Contexts;
 using DATN.Web.Service.DtoEdit;
 using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
@@ -214,5 +215,39 @@ namespace DATN.Web.Api.Controllers
                 return Ok(actionResult);
             }
         }
+
+        /// <summary>
+        /// Bình luận đánh giá đơn hàng
+        /// </summary>
+        [HttpPost("commentProduct")]
+        public async Task<IActionResult> CommentProduct(CommentProduct commentProduct)
+        {
+            try
+            {
+                var contextData = _contextService.Get();
+                foreach (var item in commentProduct.commentProducts)
+                {
+                    item.user_id = contextData.UserId;
+                    item.created_date = DateTime.Now;
+                }
+                var res = await _orderService.CommentProduct(commentProduct);
+                if (res)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
     }
 }
