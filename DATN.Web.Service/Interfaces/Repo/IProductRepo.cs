@@ -64,5 +64,10 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// Lấy Thông tin sản phẩm gần đây nhất
         /// </summary>
         Task<ProductEntity> GetProductLastest();
+
+        /// <summary>
+        /// Lấy danh sách sản phẩm để so sánh
+        /// </summary>
+        Task<List<ProductEntity>> ListProductCompare(Guid id);
     }
 }

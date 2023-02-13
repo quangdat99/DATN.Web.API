@@ -106,7 +106,7 @@ namespace DATN.Web.Repo.Repo
                 param, CommandType.StoredProcedure);
             return res;
         }
-        
+
         public async Task<List<object>> GetRateOption(Guid id)
         {
             var param = new Dictionary<string, object>()
@@ -174,10 +174,11 @@ namespace DATN.Web.Repo.Repo
                         {
                             sb.Append($" quantity_int {filterTable.sortType[i]}");
                         }
-                        else if (filterTable.sortBy[i] == "sale_price") 
+                        else if (filterTable.sortBy[i] == "sale_price")
                         {
                             sb.Append($" sale_price_int {filterTable.sortType[i]}");
-                        } else
+                        }
+                        else
                         {
                             sb.Append($" {filterTable.sortBy[i]} {filterTable.sortType[i]}");
                         }
@@ -186,7 +187,8 @@ namespace DATN.Web.Repo.Repo
                             sb.Append(",");
                         }
                     }
-                } else
+                }
+                else
                 {
                     sb.Append($" ORDER BY p.created_date DESC");
                 }
@@ -262,5 +264,17 @@ namespace DATN.Web.Repo.Repo
             var result = await Provider.QueryAsync<ProductEntity>(sql, param);
             return result?.FirstOrDefault();
         }
+        public async Task<List<ProductEntity>> ListProductCompare(Guid id)
+        {
+            var param = new Dictionary<string, object>()
+            {
+                { "$ProductId", id },
+            };
+            var res = await this.Provider.QueryAsync<ProductEntity>("Proc_GetListProductCompare",
+                param, CommandType.StoredProcedure);
+
+            return res;
+        }
+
     }
 }

@@ -129,7 +129,8 @@ namespace DATN.Web.Service.Middlewares
                 "/api/Products/relation",
                 "/api/Products/rateOption",
                 "/api/Products/commentProduct",
-                "/Upload/"
+                "/Upload/",
+                "/listProductCompare/"
             };
             if (lstPath.Any(x => path.Contains(x)))
             {
