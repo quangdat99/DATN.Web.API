@@ -36,6 +36,10 @@ namespace DATN.Web.Service.Model
         /// </summary>
         public int TotalRecord { get; set; }
 
+        //public string TotalAmount { get; set; }
+        //public string PurchaseAmount { get; set; }
+        //public string ProfitAmount { get; set; }
+
         public DAResult(int statusCode, string userMessage, string devMessage, dynamic data)
         {
             StatusCode = statusCode;
@@ -52,5 +56,16 @@ namespace DATN.Web.Service.Model
             TotalRecord = totalRecord;
             Data = data;
         }
+        //public DAResult(int statusCode, string userMessage, string devMessage, dynamic data, int totalRecord, string totalAmount, string purchaseAmount, string profitAmount)
+        //{
+        //    StatusCode = statusCode;
+        //    UserMessage = userMessage;
+        //    DevMessage = devMessage;
+        //    TotalRecord = totalRecord;
+        //    Data = data;
+        //    TotalAmount = totalAmount;
+        //    PurchaseAmount = purchaseAmount;
+        //    ProfitAmount = profitAmount;
+        //}
     }
 }

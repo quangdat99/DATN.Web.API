@@ -41,5 +41,13 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// </summary>
         /// <param name="id">id đơn hàng</param>
         Task<OrderInfo> GetOrderInfo(Guid id);
+        /// <summary>
+        /// Thống kê doanh thu chi tiết theo đơn hàng
+        /// </summary>
+        Task<DAResult> GetDashboardOrder(FilterTable filterTable);
+        /// <summary>
+        /// Thống kê tổng tiền doanh thu chi tiết theo đơn hàng
+        /// </summary>
+        Task<TotalResult> GetDashboardOrderTotal(string filter);
     }
 }

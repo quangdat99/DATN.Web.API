@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DATN.Web.Repo.Repo;
 using DATN.Web.Service.Constants;
@@ -232,6 +233,51 @@ namespace DATN.Web.Api.Controllers
                 }
                 var res = await _orderService.CommentProduct(commentProduct);
                 if (res)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", null);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Lấy Thông tin doanh thu theo đơn hàng
+        /// </summary>
+        [HttpPost("dashboardOrder")]
+        public async Task<IActionResult> GetDashboardOrder([FromBody] FilterTable filterTable)
+        {
+            try
+            {
+                var res = await _orderRepo.GetDashboardOrder(filterTable);
+                return Ok(res);
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<ProductClient>());
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Lấy tổng số tiền Thông tin doanh thu theo đơn hàng
+        /// </summary>
+        [HttpPost("dashboardOrderTotal")]
+        public async Task<IActionResult> GetDashboardOrderTotal([FromBody] string filter)
+        {
+            try
+            {
+                var res = await _orderRepo.GetDashboardOrderTotal(filter);
+                if (res != null)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
                     return Ok(actionResult);

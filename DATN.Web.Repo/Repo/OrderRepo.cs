@@ -149,7 +149,7 @@ namespace DATN.Web.Repo.Repo
 
                 var sb = new StringBuilder(
                     $"SELECT o.order_id, o.order_code, CONCAT(u.first_name, ' ', u.last_name) AS buyer_name, o.user_name," +
-                    " GROUP_CONCAT(CONCAT(CONCAT('- ',po.product_name), IF(po.color_name IS NOT NULL, CONCAT(' (', po.color_name, ')'), ''), IF(po.size_name IS NOT NULL, CONCAT(' (', po.size_name, ')'), '')) SEPARATOR '; ') as description," +
+                    " GROUP_CONCAT(CONCAT(CONCAT('- ',po.product_name), IF(po.color_name IS NOT NULL, CONCAT(' (', po.color_name, ')'), ''), IF(po.size_name IS NOT NULL, CONCAT(' (', po.size_name, ')'), ''), ' x', po.quantity) SEPARATOR '; ') as description," +
                     " CASE WHEN status = 5 THEN 'Chờ xác nhận' " +
                     "WHEN status = 2 THEN 'Chờ lấy hàng' " +
                     "WHEN status = 3 THEN 'Đang giao hàng' " +
@@ -226,6 +226,141 @@ namespace DATN.Web.Repo.Repo
 
             return new DAResult(200, Resources.getDataSuccess, "", result, totalRecord);
         }
+        public async Task<TotalResult> GetDashboardOrderTotal(string filter)
+        {
+
+
+            var param = new Dictionary<string, object>();
+            var where = this.ParseWhere(filter, param);
+
+            IDbConnection cnn = null;
+            TotalResult totalResult;
+            try
+            {
+                cnn = this.Provider.GetOpenConnection();
+
+                var sqlTotal = new StringBuilder(
+                    "SELECT " +
+                      "FORMAT(SUM(po.product_amount * po.quantity), 0) AS TotalAmount, " +
+                      "FORMAT(SUM(IFNULL(po.purchase_amount, 0) * po.quantity), 0) AS PurchaseAmount, " +
+                      "FORMAT(SUM(po.product_amount * po.quantity) - SUM(IFNULL(po.purchase_amount, 0) * po.quantity), 0) AS ProfitAmount " +
+                    "FROM `order` o " +
+                      "LEFT JOIN product_order po " +
+                        "ON o.order_id = po.order_id " +
+                        "WHERE o.success_date IS NOT NULL "
+
+                    );
+
+                if (!string.IsNullOrWhiteSpace(where))
+                {
+                    sqlTotal.Append($" AND {where}");
+                }
+                totalResult = (await cnn.QueryAsync<TotalResult>(sqlTotal.ToString(), param)).ToList().FirstOrDefault();
+            }
+            finally
+            {
+                this.Provider.CloseConnection(cnn);
+            }
+            return totalResult;
+        }
+        public async Task<DAResult> GetDashboardOrder(FilterTable filterTable)
+        {
+            var table = this.GetTableName(typeof(OrderEntity));
+            var columnSql = this.ParseColumn(string.Join(",", filterTable.fields));
+
+            var param = new Dictionary<string, object>();
+            var where = this.ParseWhere(filterTable.filter, param);
+
+            IDbConnection cnn = null;
+            IList result = null;
+            int totalRecord = 0;
+            TotalResult totalResult;
+            try
+            {
+                cnn = this.Provider.GetOpenConnection();
+
+                var sb = new StringBuilder(
+                            "SELECT " +
+                            "  o.order_id, " +
+                            "  o.order_code, " +
+                            "  CONCAT(u.first_name, ' ', u.last_name) AS buy_name, " +
+                            "  DATE_FORMAT(o.created_date, '%d-%m-%Y') AS created_date, " +
+                            "  DATE_FORMAT(o.success_date, '%d-%m-%Y') AS success_date, " +
+                            "  GROUP_CONCAT(CONCAT(CONCAT('- ', po.product_name), IF(po.color_name IS NOT NULL, CONCAT(' (', po.color_name, ')'), ''), IF(po.size_name IS NOT NULL, CONCAT(' (', po.size_name, ')'), ''), ' x', po.quantity) SEPARATOR '; ') AS description, " +
+                            "  FORMAT(o.total_amount, 0) AS totalAmount, " +
+                            "  FORMAT(SUM(IFNULL(po.purchase_amount, 0) * po.quantity), 0) AS purchasePrice, " +
+                            "  SUM(IFNULL(po.purchase_amount, 0) * po.quantity) AS purchasePriceInt, " +
+                            "  FORMAT(o.total_amount - SUM(IFNULL(po.purchase_amount, 0) * po.quantity), 0) AS profitAmount, " +
+                            "  o.total_amount - SUM(IFNULL(po.purchase_amount, 0) * po.quantity) AS profitAmountInt " +
+                            "FROM `order` o " +
+                            "  LEFT JOIN product_order po " +
+                            "    ON o.order_id = po.order_id " +
+                            "  LEFT JOIN user u " +
+                            "    ON o.user_id = u.user_id " +
+                            "WHERE o.success_date IS NOT NULL "
+                    );
+                var sqlSummary = new StringBuilder($"SELECT COUNT(*) FROM {table}");
+
+                if (!string.IsNullOrWhiteSpace(where))
+                {
+                    sb.Append($" AND {where}");
+                    sqlSummary.Append($" AND {where}");
+                }
+
+                sb.Append($" GROUP BY o.order_id, u.first_name, u.last_name, o.order_code ");
+
+
+                // Sắp xếp
+                if (filterTable.sortBy?.Count > 0 && filterTable.sortType?.Count > 0)
+                {
+                    sb.Append($" ORDER BY ");
+                    for (int i = 0; i < filterTable.sortBy.Count; i++)
+                    {
+
+                        if (filterTable.sortBy[i] == "totalAmount")
+                        {
+                            sb.Append($" total_amount {filterTable.sortType[i]}");
+                        }
+                        else if (filterTable.sortBy[i] == "purchasePrice")
+                        {
+                            sb.Append($" purchasePriceInt {filterTable.sortType[i]}");
+                        }
+                        else if (filterTable.sortBy[i] == "profitAmount")
+                        {
+                            sb.Append($" profitAmountInt {filterTable.sortType[i]}");
+                        }
+                        else
+                        {
+                            sb.Append($" {filterTable.sortBy[i]} {filterTable.sortType[i]}");
+                        }
+
+                        if (i != filterTable.sortBy.Count - 1)
+                        {
+                            sb.Append(",");
+                        }
+                    }
+                }
+                else
+                {
+                    sb.Append($" ORDER BY created_date DESC");
+                }
+
+                if (filterTable.page > 0 && filterTable.size > 0)
+                {
+                    sb.Append($" LIMIT {filterTable.size} OFFSET {(filterTable.page - 1) * filterTable.size}");
+                }
+
+                result = await this.Provider.QueryAsync(cnn, sb.ToString(), param);
+                totalRecord = await cnn.ExecuteScalarAsync<int>(sqlSummary.ToString(), param);
+            }
+            finally
+            {
+                this.Provider.CloseConnection(cnn);
+            }
+
+            return new DAResult(200, Resources.getDataSuccess, "", result, totalRecord);
+        }
+
 
         public async Task<OrderInfo> GetOrderInfo(Guid id)
         {

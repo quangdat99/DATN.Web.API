@@ -96,7 +96,8 @@ namespace DATN.Web.Service.Service
                                 size_name = productCart.size_name,
                                 url_img = productCart.img_url,
                                 quantity = productCart.quantity,
-                                product_amount_old = productCart.sale_price_old ?? 0
+                                product_amount_old = productCart.sale_price_old ?? 0,
+                                purchase_amount = productDetail.purchase_price
                             };
                             productOrder.Add(item);
                             productDetail.quantity = productDetail.quantity - productCart.quantity;
@@ -149,7 +150,8 @@ namespace DATN.Web.Service.Service
                             size_name = p.size_name,
                             url_img = p.img_url,
                             quantity = p.quantity,
-                            product_amount_old = p.sale_price_old ?? 0
+                            product_amount_old = p.sale_price_old ?? 0,
+                            purchase_amount = productDetail.purchase_price
                         };
                         productOrder.Add(item);
                         productDetail.quantity = productDetail.quantity - p.quantity;
