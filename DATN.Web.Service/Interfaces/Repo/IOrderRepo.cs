@@ -49,5 +49,9 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// Thống kê tổng tiền doanh thu chi tiết theo đơn hàng
         /// </summary>
         Task<TotalResult> GetDashboardOrderTotal(string filter);
+        /// <summary>
+        /// Thống kê doanh thu chi tiết theo sản phẩm
+        /// </summary>
+        Task<DAResult> GetDashboardProduct(FilterTable filterTable);
     }
 }

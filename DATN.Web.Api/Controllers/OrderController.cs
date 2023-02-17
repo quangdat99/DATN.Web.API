@@ -272,11 +272,11 @@ namespace DATN.Web.Api.Controllers
         /// Lấy tổng số tiền Thông tin doanh thu theo đơn hàng
         /// </summary>
         [HttpPost("dashboardOrderTotal")]
-        public async Task<IActionResult> GetDashboardOrderTotal([FromBody] string filter)
+        public async Task<IActionResult> GetDashboardOrderTotal([FromBody] FilterTable filter)
         {
             try
             {
-                var res = await _orderRepo.GetDashboardOrderTotal(filter);
+                var res = await _orderRepo.GetDashboardOrderTotal(filter.filter);
                 if (res != null)
                 {
                     var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
@@ -291,6 +291,24 @@ namespace DATN.Web.Api.Controllers
             catch (Exception exception)
             {
                 var actionResult = new DAResult(500, Resources.error, exception.Message, null);
+                return Ok(actionResult);
+            }
+        }
+
+        /// <summary>
+        /// Lấy Thông tin doanh thu theo sản phẩm
+        /// </summary>
+        [HttpPost("dashboardProduct")]
+        public async Task<IActionResult> GetDashboardProduct([FromBody] FilterTable filterTable)
+        {
+            try
+            {
+                var res = await _orderRepo.GetDashboardProduct(filterTable);
+                return Ok(res);
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<ProductClient>());
                 return Ok(actionResult);
             }
         }

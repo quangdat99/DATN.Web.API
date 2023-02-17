@@ -231,7 +231,7 @@ namespace DATN.Web.Repo.Repo
 
 
             var param = new Dictionary<string, object>();
-            var where = this.ParseWhere(filter, param);
+            var where = this.ParseWhere(filter, param, "o");
 
             IDbConnection cnn = null;
             TotalResult totalResult;
@@ -269,7 +269,7 @@ namespace DATN.Web.Repo.Repo
             var columnSql = this.ParseColumn(string.Join(",", filterTable.fields));
 
             var param = new Dictionary<string, object>();
-            var where = this.ParseWhere(filterTable.filter, param);
+            var where = this.ParseWhere(filterTable.filter, param, "o");
 
             IDbConnection cnn = null;
             IList result = null;
@@ -299,7 +299,7 @@ namespace DATN.Web.Repo.Repo
                             "    ON o.user_id = u.user_id " +
                             "WHERE o.success_date IS NOT NULL "
                     );
-                var sqlSummary = new StringBuilder($"SELECT COUNT(*) FROM {table}");
+                var sqlSummary = new StringBuilder($"SELECT COUNT(*) FROM {table} o WHERE success_date IS NOT NULL ");
 
                 if (!string.IsNullOrWhiteSpace(where))
                 {
@@ -360,7 +360,99 @@ namespace DATN.Web.Repo.Repo
 
             return new DAResult(200, Resources.getDataSuccess, "", result, totalRecord);
         }
+        public async Task<DAResult> GetDashboardProduct(FilterTable filterTable)
+        {
+            var table = this.GetTableName(typeof(ProductOrderEntity));
+            var columnSql = this.ParseColumn(string.Join(",", filterTable.fields));
 
+            var param = new Dictionary<string, object>();
+            var where = this.ParseWhere(filterTable.filter, param, "o");
+
+            IDbConnection cnn = null;
+            IList result = null;
+            int totalRecord = 0;
+            TotalResult totalResult;
+            try
+            {
+                cnn = this.Provider.GetOpenConnection();
+
+                var sb = new StringBuilder(
+                            " SELECT " +
+                              " CONCAT(po.product_name, IF(po.color_name IS NOT NULL, CONCAT(' (', po.color_name, ')'), ''), IF(po.size_name IS NOT NULL, CONCAT(' (', po.size_name, ')'), '')) AS description, " +
+                              " SUM(po.quantity) quantity, " +
+                              " FORMAT(SUM(po.product_amount * po.quantity), 0) AS totalAmount, " +
+                              " SUM(po.product_amount * po.quantity) AS totalAmountInt, " +
+                              " FORMAT(SUM(IFNULL(po.purchase_amount, 0) * po.quantity), 0) AS purchasePrice, " +
+                              " SUM(IFNULL(po.purchase_amount, 0) * po.quantity) AS purchasePriceInt, " +
+                              " FORMAT(SUM(po.product_amount * po.quantity) - SUM(IFNULL(po.purchase_amount, 0) * po.quantity), 0) AS profitAmount, " +
+                              " SUM(po.product_amount * po.quantity) - SUM(IFNULL(po.purchase_amount, 0) * po.quantity) AS profitAmountInt " +
+                            " FROM product_order po " +
+                              " LEFT JOIN `order` o " +
+                                " ON o.order_id = po.order_id " +
+                            " WHERE o.success_date IS NOT NULL " 
+                    );
+                var sqlSummary = new StringBuilder($"SELECT COUNT(*) FROM (SELECT po.product_name, po.color_name, po.size_name FROM {table} po LEFT JOIN `order` o ON o.order_id = po.order_id WHERE success_date IS NOT NULL ");
+
+                if (!string.IsNullOrWhiteSpace(where))
+                {
+                    sb.Append($" AND {where}");
+                    sqlSummary.Append($" AND {where}");
+                }
+
+                sb.Append($" GROUP BY po.product_name, po.color_name, po.size_name ");
+                sqlSummary.Append($" GROUP BY po.product_name, po.color_name, po.size_name) as t ");
+
+
+                // Sắp xếp
+                if (filterTable.sortBy?.Count > 0 && filterTable.sortType?.Count > 0)
+                {
+                    sb.Append($" ORDER BY ");
+                    for (int i = 0; i < filterTable.sortBy.Count; i++)
+                    {
+
+                        if (filterTable.sortBy[i] == "totalAmount")
+                        {
+                            sb.Append($" totalAmountInt {filterTable.sortType[i]}");
+                        }
+                        else if (filterTable.sortBy[i] == "purchasePrice")
+                        {
+                            sb.Append($" purchasePriceInt {filterTable.sortType[i]}");
+                        }
+                        else if (filterTable.sortBy[i] == "profitAmount")
+                        {
+                            sb.Append($" profitAmountInt {filterTable.sortType[i]}");
+                        }
+                        else
+                        {
+                            sb.Append($" {filterTable.sortBy[i]} {filterTable.sortType[i]}");
+                        }
+
+                        if (i != filterTable.sortBy.Count - 1)
+                        {
+                            sb.Append(",");
+                        }
+                    }
+                }
+                else
+                {
+                    sb.Append($" ORDER BY product_name ASC");
+                }
+
+                if (filterTable.page > 0 && filterTable.size > 0)
+                {
+                    sb.Append($" LIMIT {filterTable.size} OFFSET {(filterTable.page - 1) * filterTable.size}");
+                }
+
+                result = await this.Provider.QueryAsync(cnn, sb.ToString(), param);
+                totalRecord = await cnn.ExecuteScalarAsync<int>(sqlSummary.ToString(), param);
+            }
+            finally
+            {
+                this.Provider.CloseConnection(cnn);
+            }
+
+            return new DAResult(200, Resources.getDataSuccess, "", result, totalRecord);
+        }
 
         public async Task<OrderInfo> GetOrderInfo(Guid id)
         {
@@ -382,7 +474,7 @@ namespace DATN.Web.Repo.Repo
                     "WHEN status = 7 THEN 'Đã hoàn trả lại' " +
                     "ELSE '' END " +
                     " AS status_name, FORMAT(total_amount, 0) as totalAmount, o.status," +
-                    " DATE_FORMAT(created_date, '%d-%m-%Y   %Hh %ip %ss') as str_created_date," + // ngày tạo đơn hàng
+                    " DATE_FORMAT(created_date, '%d-%m-%Y    %H:%i:%s') as str_created_date," + // ngày tạo đơn hàng
                     " DATE_FORMAT(cancel_date, '%d-%m-%Y   %H:%i:%s') as str_cancel_date," + // Ngày hủy đơn hàng
                     " DATE_FORMAT(statrt_delivery_date, '%d-%m-%Y   %H:%i:%s') as str_statrt_delivery_date," + // Ngày xác nhận đơn hàng
                     " DATE_FORMAT(delivery_date, '%d-%m-%Y   %H:%i:%s') as str_delivery_date," + // Ngày bắt đầu giao 
