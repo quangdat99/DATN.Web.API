@@ -96,6 +96,7 @@ namespace DATN.Web.Service.Middlewares
 
                     var contextData = new ContextData();
                     contextData.UserId = Guid.Parse(payload[TokenKeys.UserId].ToString());
+                    contextData.CartId = Guid.Parse(payload[TokenKeys.CartId].ToString());
                     contextData.Email = payload[TokenKeys.Email].ToString();
                     contextData.FirstName = payload[TokenKeys.FirstName].ToString();
                     contextData.LastName = payload[TokenKeys.LastName].ToString();

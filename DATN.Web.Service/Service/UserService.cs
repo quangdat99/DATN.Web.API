@@ -96,6 +96,7 @@ namespace DATN.Web.Service.Service
             claimIdentity.AddClaim(new Claim(TokenKeys.Email, context.Email));
             claimIdentity.AddClaim(new Claim(TokenKeys.FirstName, context.FirstName));
             claimIdentity.AddClaim(new Claim(TokenKeys.LastName, context.LastName));
+            claimIdentity.AddClaim(new Claim(TokenKeys.CartId, context.CartId.ToString()));
 
             var expire = DateTime.Now.AddSeconds(jwtTokenConfig.ExpiredSeconds);
             context.TokenExpired = expire;

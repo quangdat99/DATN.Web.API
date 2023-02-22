@@ -158,6 +158,7 @@ namespace DATN.Web.Service.Service
             product.description = saveProduct.description;
             product.outstanding = saveProduct.outstanding;
             product.status = saveProduct.status;
+            product.created_date = saveProduct.created_date;
             if (mode == 1) // Thêm mới
             {
                 product.created_date = DateTime.Now;

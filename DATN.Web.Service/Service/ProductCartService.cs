@@ -177,11 +177,12 @@ namespace DATN.Web.Service.Service
                 }
 
             }
+
+            await _productCartRepo.InsertAsync<OrderEntity>(order);
             foreach (var item in productOrder)
             {
                 await _productCartRepo.InsertAsync<ProductOrderEntity>(item);
             }
-            await _productCartRepo.InsertAsync<OrderEntity>(order);
 
             return 1;
         }
