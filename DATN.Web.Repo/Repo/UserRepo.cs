@@ -69,6 +69,12 @@ namespace DATN.Web.Repo.Repo
             {
                 throw new ValidateException("Mật khẩu không chính xác, vui lòng kiểm tra lại", model, int.Parse(ResultCode.WrongPassword));
             }
+
+            if (res.is_block == true)
+            {
+                throw new ValidateException("Tài khoản của bạn không có quyền truy cập", model, 209);
+
+            }
             return result.FirstOrDefault();
 
         }
