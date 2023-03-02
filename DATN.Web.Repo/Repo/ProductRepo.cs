@@ -84,15 +84,14 @@ namespace DATN.Web.Repo.Repo
             return res;
         }
 
-        public async Task<List<ProductClient>> GetProductRelation(Guid id, int mode)
+        public async Task<List<ProductRelation>> GetProductRelation(Guid productId, int number)
         {
             var param = new Dictionary<string, object>()
             {
-                { "$product_id", id },
-                { "$orderby_created_date", mode == 1 },
-                { "$orderby_sell", mode == 2 },
+                { "$ProductId", productId },
+                { "$Number", number },
             };
-            var res = await this.Provider.QueryAsync<ProductClient>("Proc_GetProductRelation",
+            var res = await this.Provider.QueryAsync<ProductRelation>("Proc_GetProductRelation",
                 param, CommandType.StoredProcedure);
             return res;
         }
@@ -276,5 +275,14 @@ namespace DATN.Web.Repo.Repo
             return res;
         }
 
+        public async Task DeleteProductRelation()
+        {
+            var sql = (@"DELETE FROM  `product_relation`");
+
+            var param = new Dictionary<string, object>
+            {
+            };
+            await Provider.ExecuteNoneQueryTextAsync(sql, param);
+        }
     }
 }

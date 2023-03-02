@@ -401,5 +401,30 @@ namespace DATN.Web.Service.Service
             }
             return sb.ToString();
         }
+
+        public async Task<bool> UpdateProductRelation(int number)
+        {
+            var products = await _productRepo.GetAsync<ProductEntity>();
+
+            await _productRepo.DeleteProductRelation();
+
+            foreach (var product in products)
+            {
+                var relations = await _productRepo.GetProductRelation(product.product_id, number);
+
+                foreach (var relation in relations)
+                {
+                   await _productRepo.InsertAsync<ProductRelationEntity>(new ProductRelationEntity
+                    {
+                        product_relation_id = Guid.NewGuid(),
+                        product_id = product.product_id,
+                        relation_id = relation.product_id,
+                        count_relation = relation.count_relation
+                    });
+                }
+
+            }
+            return true;
+        }
     }
 }

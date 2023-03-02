@@ -56,5 +56,12 @@ namespace DATN.Web.Service.Interfaces.Service
         /// Lấy Thông tin mã sản phẩm mới
         /// </summary>
         Task<string> NewCode();
+
+
+        /// <summary>
+        /// Cập nhật sản phẩm kèm theo cho từng sản phẩm
+        /// </summary>
+        /// <param name="number">số sản phẩm kèm theo tối đa cho từng sản phẩm</param>
+        Task<bool> UpdateProductRelation(int number);
     }
 }

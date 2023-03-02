@@ -33,7 +33,7 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// <summary>
         /// Lấy danh sách sản phẩm liên quan
         /// </summary>
-        Task<List<ProductClient>> GetProductRelation(Guid id, int mode);
+        //Task<List<ProductClient>> GetProductRelation(Guid id, int mode);
 
         /// <summary>
         /// Lấy danh sách sản phẩm liên quan theo đơn hàng
@@ -69,5 +69,15 @@ namespace DATN.Web.Service.Interfaces.Repo
         /// Lấy danh sách sản phẩm để so sánh
         /// </summary>
         Task<List<ProductEntity>> ListProductCompare(Guid id);
+
+        /// <summary>
+        /// Lấy sản phẩm liên quan cùng đơn hàng với productId
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        Task<List<ProductRelation>> GetProductRelation(Guid productId, int number);
+
+        Task DeleteProductRelation();
     }
 }

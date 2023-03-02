@@ -97,29 +97,29 @@ namespace DATN.Web.Api.Controllers
         /// <summary>
         /// Lấy Thông tin sản phẩm liên quan
         /// </summary>
-        [HttpGet("relation/{id}/{mode}")]
-        public async Task<IActionResult> GetProductRelation(Guid id, int mode)
-        {
-            try
-            {
-                var res = await _productRepo.GetProductRelation(id, mode);
-                if (res != null)
-                {
-                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
-                    return Ok(actionResult);
-                }
-                else
-                {
-                    var actionResult = new DAResult(204, Resources.noReturnData, "", new List<ProductClient>());
-                    return Ok(actionResult);
-                }
-            }
-            catch (Exception exception)
-            {
-                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<ProductClient>());
-                return Ok(actionResult);
-            }
-        }
+        //[HttpGet("relation/{id}/{mode}")]
+        //public async Task<IActionResult> GetProductRelation(Guid id, int mode)
+        //{
+        //    try
+        //    {
+        //        var res = await _productRepo.GetProductRelation(id, mode);
+        //        if (res != null)
+        //        {
+        //            var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+        //            return Ok(actionResult);
+        //        }
+        //        else
+        //        {
+        //            var actionResult = new DAResult(204, Resources.noReturnData, "", new List<ProductClient>());
+        //            return Ok(actionResult);
+        //        }
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        var actionResult = new DAResult(500, Resources.error, exception.Message, new List<ProductClient>());
+        //        return Ok(actionResult);
+        //    }
+        //}
 
         /// <summary>
         /// Lấy Thông tin sản phẩm liên quan
@@ -429,6 +429,36 @@ namespace DATN.Web.Api.Controllers
             catch (Exception exception)
             {
                 var actionResult = new DAResult(500, Resources.error, exception.Message, new List<object>());
+                return Ok(actionResult);
+            }
+        }
+
+
+
+        /// <summary>
+        /// Cập nhật sản phẩm kèm theo cho từng sản phẩm
+        /// </summary>
+        /// <param name="number">số sản phẩm kèm theo tối đa cho từng sản phẩm</param>
+        [HttpPut("relation")]
+        public async Task<IActionResult> UpdateProductRelation([FromBody] int number)
+        {
+            try
+            {
+                var res = await _productService.UpdateProductRelation(number);
+                if (res)
+                {
+                    var actionResult = new DAResult(200, Resources.getDataSuccess, "", res);
+                    return Ok(actionResult);
+                }
+                else
+                {
+                    var actionResult = new DAResult(204, Resources.noReturnData, "", res);
+                    return Ok(actionResult);
+                }
+            }
+            catch (Exception exception)
+            {
+                var actionResult = new DAResult(500, Resources.error, exception.Message, new List<ProductClient>());
                 return Ok(actionResult);
             }
         }
