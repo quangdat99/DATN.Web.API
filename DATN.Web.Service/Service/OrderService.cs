@@ -10,6 +10,7 @@ using DATN.Web.Service.Interfaces.Repo;
 using DATN.Web.Service.Interfaces.Service;
 using DATN.Web.Service.Model;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace DATN.Web.Service.Service
 {
@@ -65,6 +66,25 @@ namespace DATN.Web.Service.Service
             }
 
             return res;
+        }
+
+        public override async Task<bool> DeleteAsync(object entity)
+        {
+            var res = JsonConvert.DeserializeObject<OrderEntity>(JsonConvert.SerializeObject(entity));
+            if (res.status == OrderStatus.Acceipt || res.status == OrderStatus.Pending)
+            {
+                var productOrders = await _orderRepo.GetAsync<ProductOrderEntity>(nameof(ProductOrderEntity.order_id), res.order_id);
+                foreach (var item in productOrders)
+                {
+                    var productDetail = await _orderRepo.GetByIdAsync<ProductDetailEntity>(item.product_detail_id);
+                    if (productDetail != null)
+                    {
+                        productDetail.quantity += item.quantity;
+                        await _orderRepo.UpdateAsync<ProductDetailEntity>(productDetail, nameof(ProductDetailEntity.quantity));
+                    }
+                }
+            }
+            return await base.DeleteAsync(entity);
         }
 
         /// <summary>
