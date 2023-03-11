@@ -33,6 +33,8 @@ namespace DATN.Web.Service.Service
 
             var listPrductCart = await _productCartRepo.GetAsync<ProductCartEntity>("cart_id", addToCart.cart_id);
 
+            var productDetail = await _productCartRepo.GetByIdAsync<ProductDetailEntity>(productCart.product_detail_id);
+
             if (listPrductCart?.Count > 0)
             {
                 var productCartExist = listPrductCart.Where(x => x.product_detail_id == addToCart.product_detail_id).FirstOrDefault();
@@ -40,6 +42,10 @@ namespace DATN.Web.Service.Service
                 if (productCartExist != null)
                 {
                     productCartExist.quantity += addToCart.quantity;
+                    if (productCartExist.quantity > productDetail.quantity)
+                    {
+                        throw new ValidateException($"Số lượng sản phẩm trong giỏ hàng vượt quá số sản phẩm. Vui lòng chọn lại số lượng!", productCart, 400);
+                    }
                     return await _productCartRepo.UpdateAsync<ProductCartEntity>(productCartExist);
                 }
                 else

@@ -62,6 +62,11 @@ namespace DATN.Web.Api.Controllers
                     return Ok(actionResult);
                 }
             }
+            catch (ValidateException exception)
+            {
+                var actionResult = new DAResult(exception.resultCode, exception.Message, "", exception.DataErr);
+                return Ok(actionResult);
+            }
             catch (Exception exception)
             {
                 var actionResult = new DAResult(500, Resources.error, exception.Message, new ProductCartEntity());
